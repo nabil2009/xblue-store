@@ -8,23 +8,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-
-        .nav-logo {
+        /* تنسيق اللوجو المحدث */
+        .nav-logo-container {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-weight: 800;
-            font-size: 20px;
-            color: var(--text-white);
+            gap: 15px;
         }
-        .nav-logo img {
-            width: 40px; /* يمكنك تكبير أو تصغير اللوجو من هنا */
-            height: 40px;
+        .nav-logo-container img {
+            width: 120px;
+            height: auto;
+            max-height: 55px;
             object-fit: contain;
-            border-radius: 8px; /* اختياري: لجعل زوايا اللوجو منحنية */
+        }
+        .nav-logo-container span {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 1px;
         }
 
-        /* نظام الإشعارات المطور */
+        /* نظام الإشعارات */
         .announcement-overlay { 
             position: fixed; 
             top: 25px; 
@@ -50,7 +53,6 @@
             position: relative;
         }
 
-        /* تمييز الإعلان الدائم */
         .ann-permanent {
             border: 2px solid #ffcc00 !important;
             box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
@@ -74,7 +76,6 @@
         .type-warning { background: linear-gradient(135deg, #f39c12, #d35400); }
         .type-danger { background: linear-gradient(135deg, #ed4245, #c0392b); }
 
-        /* تنسيقات إضافية */
         .project-stats { display: flex; gap: 15px; margin: 10px 0; font-size: 12px; color: #aaa; }
         .stat-item { display: flex; align-items: center; gap: 5px; }
         .tag-pill { background: rgba(88, 101, 242, 0.1); color: #5865F2; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
@@ -95,17 +96,17 @@
 </div>
 
 <nav class="navbar">
-<div class="logo" style="display: flex; align-items: center; gap: 15px;">
-    <img src="logopff.png" alt="Logo" style="width: 120px; height: auto; max-height: 50px; object-fit: contain;">
-    <span style="font-size: 30px; font-weight: bold; color: #fff;">xBlue Studio</span>
-</div>
+    <div class="nav-logo-container">
+        <img src="logopff.png" alt="xBlue Logo">
+        <span>xBlue Studio</span>
+    </div>
 
-<div style="display: flex; align-items: center; gap: 20px;">
-    <div id="userInfo" class="user-pill"></div>
-    <button onclick="logout()" class="btn-danger" style="border-radius: 12px; padding: 10px 15px;">
-        <i class="fas fa-sign-out-alt"></i>
-    </button>
-</div>
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <div id="userInfo" class="user-pill"></div>
+        <button onclick="logout()" class="btn-danger" style="border-radius: 12px; padding: 10px 15px;">
+            <i class="fas fa-sign-out-alt"></i>
+        </button>
+    </div>
 </nav>
 
 <div class="container">
@@ -177,12 +178,12 @@
     const MY_DISCORD_ID = '1191367983466033252'; 
     const SERVER_ID = '1269271668250116136'; 
     const PREMIUM_ROLE_ID = '1369345035514155071';
+    const DOMAIN_URL = 'https://xbluestudio.qzz.io';
 
     async function checkAuth() {
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (!session) { window.location.href = 'index.html'; return; }
         
-        // جلب بيانات المستخدم للتأكد من الرتبة
         const isAdmin = String(session.user.user_metadata.provider_id) === MY_DISCORD_ID;
         const hasPremium = await checkDiscordRole(session.provider_token);
         
@@ -195,7 +196,6 @@
             document.getElementById('adminSection').style.display = 'block';
         }
         
-        // تحميل المشاريع مع تمرير الصلاحيات
         loadProjects(isAdmin, hasPremium);
     }
 
@@ -209,7 +209,6 @@
         } catch (e) { return false; }
     }
 
-    // دالة إضافة المشروع المحدثة - معالجة خطأ العمود tag
     async function addProject() {
         const pData = {
             name: document.getElementById('pName').value,
@@ -228,24 +227,15 @@
         if(!pData.name || !pData.link) return alert("الاسم والرابط مطلوبان!");
 
         try {
-            // محاولة النشر مع تفعيل headers لتجاوز الكاش القديم إذا وجد
             const { data, error } = await supabaseClient
                 .from('projects')
-                .insert([pData])
-                .select();
+                .insert([pData]);
 
-            if (error) {
-                // إذا كان الخطأ بسبب العمود tag، سيظهر هنا بوضوح
-                if (error.message.includes('tag')) {
-                    throw new Error("قاعدة البيانات لا تتعرف على عمود 'tag'. تأكد من تشغيل كود SQL الذي أعطيتك إياه.");
-                }
-                throw error;
-            }
+            if (error) throw error;
 
-            alert("تم النشر بنجاح يا بطل! 🚀");
+            alert("تم النشر بنجاح! 🚀");
             location.reload();
         } catch (err) {
-            console.error(err);
             alert("فشل النشر: " + err.message);
         }
     }
@@ -256,23 +246,21 @@
             .select('*')
             .order('created_at', { ascending: false });
 
-        if (error) return console.error("خطأ في جلب البيانات:", error.message);
+        if (error) return;
 
         const pGrid = document.getElementById('publicGrid');
         const prGrid = document.getElementById('premiumGrid');
         
-        // تنظيف القوائم قبل التحميل لضمان عدم التكرار
         pGrid.innerHTML = '';
         prGrid.innerHTML = '';
 
         projects.forEach(p => {
             const cardHTML = `
-                <div class="card" onclick="updateViews(${p.id})">
+                <div class="card">
                     <div class="card-img-wrapper"><img src="${p.image_url || 'https://via.placeholder.com/320'}"></div>
                     <div class="card-body">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <span class="tag-pill">${p.tag || 'عام'}</span>
-                            <div style="color:#ffcc00; font-size:12px;"><i class="fas fa-star"></i> 5.0</div>
                         </div>
                         <h3>${p.name} <small style="font-size:10px; color:#666;">${p.version}</small></h3>
                         <div class="project-stats">
@@ -280,7 +268,7 @@
                             <div class="stat-item"><i class="fas fa-eye"></i> ${p.views || 0}</div>
                         </div>
                         <div class="requirements-box"><strong>المتطلبات:</strong> ${p.requirements || 'لا يوجد'}</div>
-                        <p style="font-size:12px; color:#aaa; line-height:1.4;">${p.description || 'لا يوجد وصف'}</p>
+                        <p style="font-size:12px; color:#aaa;">${p.description || ''}</p>
                         <div style="display:flex; gap:10px; margin-top:15px;">
                             <a href="${p.link}" target="_blank" onclick="updateDownloads(${p.id})" class="btn-download"><i class="fas fa-download"></i> تحميل</a>
                             ${isAdmin ? `<button onclick="deleteProject(${p.id})" class="btn-danger" style="width:45px; border-radius:50%; flex:none;"><i class="fas fa-trash"></i></button>` : ''}
@@ -296,87 +284,29 @@
         });
     }
 
-    // نظام الإعلانات (Sticky & Anti-close)
-    function broadcastAnnouncement() {
-        const text = document.getElementById('noteText').value;
-        const type = document.getElementById('annType').value;
-        const duration = parseInt(document.getElementById('annDuration').value);
-        
-        if (!text) return alert("اكتب نص الإعلان أولاً!");
+    async function deleteProject(id) { 
+        if(confirm('هل أنت متأكد من حذف هذا المشروع نهائياً؟')) { 
+            try {
+                const { error } = await supabaseClient
+                    .from('projects')
+                    .delete()
+                    .eq('id', id); 
 
-        const overlay = document.getElementById('announcementOverlay');
-        const box = document.getElementById('annBox');
-        const closeBtn = document.getElementById('annCloseBtn');
-        
-        document.getElementById('annText').innerText = text;
-        
-        // إعداد النوع والتنسيق
-        box.className = `ann-content ${type}`;
-        
-        if (duration === 0) {
-            // إعلان دائم: إضافة كلاس التثبيت وإخفاء زر الإغلاق
-            box.classList.add('ann-permanent');
-            if (closeBtn) closeBtn.style.display = 'none';
-        } else {
-            // إعلان مؤقت: إظهار زر الإغلاق وحذفه بعد المدة
-            box.classList.remove('ann-permanent');
-            if (closeBtn) closeBtn.style.display = 'block';
-            setTimeout(() => removeAnnouncement(), duration);
-        }
-        
-        overlay.style.display = 'block';
-    }
-
-    function removeAnnouncement() {
-        document.getElementById('announcementOverlay').style.display = 'none';
-    }
-
-    function closeAnnouncement() {
-        // تعمل فقط إذا لم يكن الإعلان "ann-permanent"
-        const box = document.getElementById('annBox');
-        if (!box.classList.contains('ann-permanent')) {
-            removeAnnouncement();
-        }
-    }
-
-    // وظائف التفاعل مع سوبابيس
-    async function updateViews(id) { 
-        await supabaseClient.rpc('increment_views', { row_id: id }); 
-    }
-    
-    async function updateDownloads(id) { 
-        await supabaseClient.rpc('increment_downloads', { row_id: id }); 
-    }
-
- async function deleteProject(id) { 
-    if(confirm('هل أنت متأكد من حذف هذا المشروع نهائياً؟')) { 
-        try {
-            // نستخدم parseInt للتأكد من أن المعرف رقم
-            const { error } = await supabaseClient
-                .from('projects')
-                .delete()
-                .eq('id', parseInt(id)); 
-
-            if (error) {
-                console.error("Delete Error:", error);
-                alert("فشل الحذف من قاعدة البيانات: " + error.message);
-                return;
+                if (error) throw error;
+                alert("تم حذف المشروع ✅");
+                location.reload(); 
+            } catch (err) {
+                alert("خطأ: " + err.message);
             }
-
-            alert("تم حذف المشروع بنجاح ✅");
-            location.reload(); 
-        } catch (err) {
-            alert("حدث خطأ غير متوقع: " + err.message);
         }
     }
-}
 
     async function logout() { 
         await supabaseClient.auth.signOut(); 
         window.location.href = 'index.html'; 
     }
-    
-    // بدء التشغيل
+
+    // تشغيل التحقق عند التحميل
     checkAuth();
 </script>
 </body>
