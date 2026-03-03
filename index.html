@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xBlue Studio | المبدعين والمطورين</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --bg-dark: #0a0b0c;
+            --card-bg: #16181a;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --accent: #00d2ff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* شريط التنقل */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: rgba(10, 11, 12, 0.8);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary);
+            filter: drop-shadow(0 0 8px var(--primary));
+        }
+
+        /* القسم الرئيسي - Hero */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: radial-gradient(circle at center, #1a1c3a 0%, #0a0b0c 100%);
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 700px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease 0.2s backwards;
+        }
+
+        /* أزرار الدخول */
+        .cta-container {
+            display: flex;
+            gap: 15px;
+            animation: fadeInUp 1s ease 0.4s backwards;
+        }
+
+        .discord-btn {
+            background: var(--primary);
+            color: white;
+            padding: 16px 35px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.2);
+        }
+
+        .discord-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(88, 101, 242, 0.4);
+        }
+
+        /* قسم الميزات - Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 80px 8%;
+            background: var(--bg-dark);
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+            text-align: right;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-10px);
+            background: #1c1e22;
+        }
+
+        .feature-card i {
+            font-size: 30px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        .feature-card p {
+            color: var(--text-dim);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* الحركات */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .cta-container { flex-direction: column; width: 100%; }
+            .discord-btn { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">
+            <i class="fas fa-bolt"></i> xBlue Studio
+        </a>
+        <div class="nav-links">
+            <button onclick="document.getElementById('loginBtn').click()" class="discord-btn" style="padding: 10px 20px; font-size: 14px;">
+                تسجيل الدخول
+            </button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="logo-animation">
+            <i class="fas fa-bolt" style="font-size: 80px; color: var(--primary); margin-bottom: 20px;"></i>
+        </div>
+        <h1>أهلاً بك في xBlue Studio 🚀</h1>
+        <p>المجتمع المتكامل للمبدعين والمطورين. المنصة الأكبر لتحميل المشاريع البرمجية، صناعة البوتات بدون كود، والحصول على موارد حصرية لا تنتهي.</p>
+        
+        <div class="cta-container">
+            <button id="loginBtn" class="discord-btn">
+                <i class="fab fa-discord"></i> دخول عبر Discord
+            </button>
+            <a href="https://discord.gg/6FxpkMTJtE" target="_blank" class="discord-btn" style="background: #2c2f33;">
+                <i class="fas fa-users"></i> المجتمع
+            </a>
+        </div>
+    </section>
+
+    <section class="features-grid">
+        <div class="feature-card">
+            <i class="fas fa-robot"></i>
+            <h3>Bot Maker (No-Code)</h3>
+            <p>اصنع بوتك الخاص بدون أي خبرة برمجية. واجهة سهلة وبسيطة تناسب الجميع.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-code"></i>
+            <h3>Ready-to-Use Projects</h3>
+            <p>مشاريع وبوتات احترافية جاهزة للعمل فوراً بأسعار منافسة وجودة عالية.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-box-open"></i>
+            <h3>Free Resources</h3>
+            <p>أكواد مجانية، لوحات تحكم، وتصاميم UI جاهزة للاستخدام في مشاريعك.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-headset"></i>
+            <h3>Expert Support</h3>
+            <p>مجتمع متفاعل ودعم فني خبير لمساعدتك في حل أي مشكلة تقنية تواجهك.</p>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 40px; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.05);">
+        <p>جميع الحقوق محفوظة &copy; 2026 xBlue Studio - المجتمع المتكامل للمبدعين</p>
+    </footer>
+
+    <script>
+        // إعدادات Supabase
+        const SUPABASE_URL = 'https://pqhdidvxjdjccknlwzit.supabase.co'; 
+        const SUPABASE_KEY = 'sb_publishable_TJ4QJng8C74CeR8L0kh-vA_fDmV40rS'; 
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        document.getElementById('loginBtn').onclick = async () => {
+            const btn = document.getElementById('loginBtn');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الاتصال...';
+            
+            const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                provider: 'discord',
+                options: {
+                    scopes: 'identify guilds guilds.members.read', 
+                    redirectTo: window.location.origin + '/dashboard.html'
+                }
+            });
+
+            if (error) {
+                alert('فشل تسجيل الدخول: ' + error.message);
+                btn.innerHTML = originalContent;
+            } else if (data.url) {
+                window.location.href = data.url; 
+            }
+        };
+
+        async function checkExistingSession() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                window.location.href = 'dashboard.html';
+            }
+        }
+        checkExistingSession();
+    </script>
+</body>
+</html>
