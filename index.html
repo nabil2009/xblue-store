@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>xBlue Studio V2 | المبدعين والمطورين</title>
+    
+    <title>xBlue Studio | متجر بوتات ديسكورد ومشاريع برمجية احترافية</title>
+    <meta name="description" content="xBlue Studio هو المجتمع الأكبر للمطورين، حمل أفضل مشاريع البوتات، أكواد برمجية جاهزة، وموارد حصرية لـ Discord. ابدأ مشروعك التقني الآن مع إكس بلو ستوديو.">
+    <meta name="keywords" content="xblue studio, بوتات ديسكورد, مشاريع برمجية, تحميل بوتات, متجر بوتات, discord bots, bot maker, اكواد جاهزة, برمجية, تطوير بوتات">
+    <meta name="author" content="xBlue Studio">
+    
+    <meta property="og:title" content="xBlue Studio | عالم المبدعين">
+    <meta property="og:description" content="أكبر مكتبة للمشاريع البرمجية وبوتات الديسكورد.">
+    <meta property="og:image" content="logopff.png">
+    <meta property="og:url" content="https://xbluestudio.qzz.io">
+
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -26,7 +36,6 @@
             overflow-x: hidden;
         }
 
-        /* شريط التنقل */
         header {
             display: flex;
             justify-content: space-between;
@@ -57,7 +66,6 @@
             filter: drop-shadow(0 0 8px var(--primary));
         }
 
-        /* القسم الرئيسي - Hero */
         .hero {
             height: 100vh;
             display: flex;
@@ -68,16 +76,6 @@
             padding: 0 20px;
             background: radial-gradient(circle at center, #1a1c3a 0%, #0a0b0c 100%);
             position: relative;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-            opacity: 0.1;
-            pointer-events: none;
         }
 
         .hero h1 {
@@ -98,7 +96,6 @@
             animation: fadeInUp 1s ease 0.2s backwards;
         }
 
-        /* أزرار الدخول */
         .cta-container {
             display: flex;
             gap: 15px;
@@ -119,6 +116,7 @@
             align-items: center;
             gap: 12px;
             box-shadow: 0 10px 20px rgba(88, 101, 242, 0.2);
+            text-decoration: none;
         }
 
         .discord-btn:hover {
@@ -127,7 +125,6 @@
             box-shadow: 0 15px 30px rgba(88, 101, 242, 0.4);
         }
 
-        /* قسم الميزات - Features */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -158,26 +155,8 @@
             display: block;
         }
 
-        .feature-card h3 {
-            margin: 10px 0;
-            font-size: 20px;
-        }
-
-        .feature-card p {
-            color: var(--text-dim);
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        /* الحركات */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 768px) {
             .cta-container { flex-direction: column; width: 100%; }
@@ -248,6 +227,9 @@
         const SUPABASE_KEY = 'sb_publishable_TJ4QJng8C74CeR8L0kh-vA_fDmV40rS'; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        // رابط الدومين الخاص بك
+        const REDIRECT_URL = 'https://xbluestudio.qzz.io/dashboard.html';
+
         document.getElementById('loginBtn').onclick = async () => {
             const btn = document.getElementById('loginBtn');
             const originalContent = btn.innerHTML;
@@ -257,7 +239,7 @@
                 provider: 'discord',
                 options: {
                     scopes: 'identify guilds guilds.members.read', 
-                    redirectTo: window.location.origin + '/dashboard.html'
+                    redirectTo: REDIRECT_URL // تم التعديل للدومين المباشر
                 }
             });
 
@@ -278,5 +260,4 @@
         checkExistingSession();
     </script>
 </body>
-
 </html>
