@@ -1,9 +1,9 @@
-[[redirects]]
-  from = "/dashboard"
-  to = "/dashboard.html"
-  status = 200
-
 [build.processing]
   skip_node_pkg = false
 [build.processing.html]
   pretty_urls = true
+
+[[redirects]]
+  from = "/dashboard"
+  to = "/dashboard.html"
+  status = 200
