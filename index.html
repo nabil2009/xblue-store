@@ -5,18 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>xBlue Studio | متجر بوتات ديسكورد ومشاريع برمجية احترافية</title>
-    <meta name="description" content="xBlue Studio هو المجتمع الأكبر للمطورين، حمل أفضل مشاريع البوتات، أكواد برمجية جاهزة، وموارد حصرية لـ Discord. ابدأ مشروعك التقني الآن مع إكس بلو ستوديو.">
-    <meta name="keywords" content="xblue studio, بوتات ديسكورد, مشاريع برمجية, تحميل بوتات, متجر بوتات, discord bots, bot maker, اكواد جاهزة, برمجية, تطوير بوتات">
-    <meta name="author" content="xBlue Studio">
+    <meta name="description" content="xBlue Studio هو المجتمع الأكبر للمطورين، حمل أفضل مشاريع البوتات، أكواد برمجية جاهزة، وموارد حصرية لـ Discord.">
     
-    <meta property="og:title" content="xBlue Studio | عالم المبدعين">
-    <meta property="og:description" content="أكبر مكتبة للمشاريع البرمجية وبوتات الديسكورد.">
-    <meta property="og:image" content="logopff.png">
-    <meta property="og:url" content="https://xbluestudio.qzz.io">
-
+    <link rel="icon" type="image/png" href="logopff.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         :root {
             --primary: #5865F2;
@@ -25,7 +20,6 @@
             --card-bg: #16181a;
             --text-main: #ffffff;
             --text-dim: #a0a0a0;
-            --accent: #00d2ff;
         }
 
         body {
@@ -36,180 +30,77 @@
             overflow-x: hidden;
         }
 
+        /* طبقة حماية من القلتش عند فحص الجلسة */
+        #auth-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark);
+            z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.5s;
+        }
+
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             padding: 20px 8%;
             background: rgba(10, 11, 12, 0.8);
             backdrop-filter: blur(10px);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            box-sizing: border-box;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: fixed; top: 0; width: 100%; box-sizing: border-box;
+            z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-main);
-            text-decoration: none;
-        }
-
-        .logo i {
-            color: var(--primary);
-            filter: drop-shadow(0 0 8px var(--primary));
-        }
+        .logo { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; }
+        .logo i { color: var(--primary); filter: drop-shadow(0 0 8px var(--primary)); }
 
         .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 0 20px;
             background: radial-gradient(circle at center, #1a1c3a 0%, #0a0b0c 100%);
-            position: relative;
         }
 
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #fff, var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: fadeInDown 1s ease;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-dim);
-            max-width: 700px;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            animation: fadeInUp 1s ease 0.2s backwards;
-        }
-
-        .cta-container {
-            display: flex;
-            gap: 15px;
-            animation: fadeInUp 1s ease 0.4s backwards;
-        }
+        .hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); margin-bottom: 10px; background: linear-gradient(to right, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.2rem; color: var(--text-dim); max-width: 700px; line-height: 1.6; margin-bottom: 30px; }
 
         .discord-btn {
-            background: var(--primary);
-            color: white;
-            padding: 16px 35px;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.2);
-            text-decoration: none;
+            background: var(--primary); color: white; padding: 16px 35px; border-radius: 12px;
+            font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; gap: 12px; text-decoration: none;
         }
+        .discord-btn:hover { background: var(--primary-dark); transform: translateY(-3px); }
 
-        .discord-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(88, 101, 242, 0.4);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            padding: 80px 8%;
-            background: var(--bg-dark);
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s;
-            text-align: right;
-        }
-
-        .feature-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-10px);
-            background: #1c1e22;
-        }
-
-        .feature-card i {
-            font-size: 30px;
-            color: var(--primary);
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 768px) {
-            .cta-container { flex-direction: column; width: 100%; }
-            .discord-btn { justify-content: center; }
-        }
-                .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-about img { width: 60px; margin-bottom: 15px; }
-        .footer-about p { color: var(--text-dim); line-height: 1.6; font-size: 14px; }
-        
-        .footer-links h4 { color: #fff; margin-bottom: 20px; font-size: 18px; }
+        /* Footer Styles */
+        .main-footer { background: #060708; padding: 60px 8% 30px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+        .footer-links h4 { color: #fff; margin-bottom: 20px; }
         .footer-links ul { list-style: none; padding: 0; }
         .footer-links ul li { margin-bottom: 12px; }
-        .footer-links ul li a { color: var(--text-dim); text-decoration: none; transition: 0.3s; font-size: 14px; }
+        .footer-links ul li a { color: var(--text-dim); text-decoration: none; transition: 0.3s; }
         .footer-links ul li a:hover { color: var(--primary); padding-right: 5px; }
+        .footer-bottom { text-align: center; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 30px; color: var(--text-dim); }
 
-        .footer-bottom {
-            padding-top: 30px;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            color: var(--text-dim);
-            font-size: 13px;
-        }
-
+        @media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr; text-align: center; } }
     </style>
 </head>
 <body>
 
+    <div id="auth-overlay">
+        <i class="fas fa-bolt fa-beat" style="font-size: 50px; color: var(--primary);"></i>
+    </div>
+
     <header>
-        <a href="#" class="logo">
-            <i class="fas fa-bolt"></i> xBlue Studio
-        </a>
+        <a href="/" class="logo"><i class="fas fa-bolt"></i> xBlue Studio</a>
         <div class="nav-links">
-            <button onclick="document.getElementById('loginBtn').click()" class="discord-btn" style="padding: 10px 20px; font-size: 14px;">
-                تسجيل الدخول
-            </button>
+            <button onclick="login()" class="discord-btn" style="padding: 10px 20px; font-size: 14px;">دخول</button>
         </div>
     </header>
 
     <section class="hero">
-        <div class="logo-animation">
-            <i class="fas fa-bolt" style="font-size: 80px; color: var(--primary); margin-bottom: 20px;"></i>
-        </div>
+        <i class="fas fa-bolt" style="font-size: 80px; color: var(--primary); margin-bottom: 20px;"></i>
         <h1>أهلاً بك في xBlue Studio 🚀</h1>
         <p>المجتمع المتكامل للمبدعين والمطورين. المنصة الأكبر لتحميل المشاريع البرمجية، صناعة البوتات بدون كود، والحصول على موارد حصرية لا تنتهي.</p>
         
-        <div class="cta-container">
-            <button id="loginBtn" class="discord-btn">
+        <div style="display: flex; gap: 15px;">
+            <button onclick="login()" class="discord-btn">
                 <i class="fab fa-discord"></i> دخول عبر Discord
             </button>
             <a href="https://discord.gg/6FxpkMTJtE" target="_blank" class="discord-btn" style="background: #2c2f33;">
@@ -218,113 +109,91 @@
         </div>
     </section>
 
-    <section class="features-grid">
-        <div class="feature-card">
-            <i class="fas fa-robot"></i>
-            <h3>Bot Maker (No-Code)</h3>
-            <p>اصنع بوتك الخاص بدون أي خبرة برمجية. واجهة سهلة وبسيطة تناسب الجميع.</p>
+    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 80px 8%;">
+        <div style="background: var(--card-bg); padding: 30px; border-radius: 20px; text-align: center;">
+            <i class="fas fa-robot" style="font-size: 30px; color: var(--primary); margin-bottom: 15px;"></i>
+            <h3>صانع البوتات</h3>
+            <p style="color: var(--text-dim);">اصنع بوتك الخاص بدون أكواد مع واجهة xBlue السهلة.</p>
         </div>
-        <div class="feature-card">
-            <i class="fas fa-code"></i>
-            <h3>Ready-to-Use Projects</h3>
-            <p>مشاريع وبوتات احترافية جاهزة للعمل فوراً بأسعار منافسة وجودة عالية.</p>
-        </div>
-        <div class="feature-card">
-            <i class="fas fa-box-open"></i>
-            <h3>Free Resources</h3>
-            <p>أكواد مجانية، لوحات تحكم، وتصاميم UI جاهزة للاستخدام في مشاريعك.</p>
-        </div>
-        <div class="feature-card">
-            <i class="fas fa-headset"></i>
-            <h3>Expert Support</h3>
-            <p>مجتمع متفاعل ودعم فني خبير لمساعدتك في حل أي مشكلة تقنية تواجهك.</p>
+        <div style="background: var(--card-bg); padding: 30px; border-radius: 20px; text-align: center;">
+            <i class="fas fa-code" style="font-size: 30px; color: var(--primary); margin-bottom: 15px;"></i>
+            <h3>مشاريع جاهزة</h3>
+            <p style="color: var(--text-dim);">أكواد ومشاريع كاملة جاهزة للتشغيل الفوري.</p>
         </div>
     </section>
 
-<footer class="main-footer">
-    <div class="footer-grid">
-        <div class="footer-about">
-            <img src="logopff.png" alt="xBlue logo">
-            <h3>xBlue Studio</h3>
-            <p>المجتمع المتكامل للمبدعين والمطورين. نوفر لك أحدث المشاريع البرمجية والموارد الحصرية لتطوير مهاراتك وبناء مستقبلك التقني.</p>
-        </div>
-        <div class="footer-links">
-            <h4>روابط سريعة</h4>
-            <ul>
-                <li><a href="/">الرئيسية</a></li>
-                <li><a href="#publicGrid">المشاريع العامة</a></li>
-                <li><a href="#premiumGrid">المشاريع الخاصة</a></li>
-            </ul>
-        </div>
-        <div class="footer-links">
-            <h4>الدعم</h4>
-            <ul>
-                <li><a href="#">شروط الخدمة</a></li>
-                <li><a href="#">سياسة الخصوصية</a></li>
-                <li><a href="https://discord.gg/6FxpkMTJtE">Discord Support</a></li>
-            </ul>
-        </div>
-        <div class="footer-links">
-            <h4>تواصل معنا</h4>
-            <div style="display: flex; gap: 15px; font-size: 20px;">
-                <a href="#" style="color: var(--text-dim);"><i class="fab fa-discord"></i></a>
-                <a href="#" style="color: var(--text-dim);"><i class="fab fa-github"></i></a>
-                <a href="#" style="color: var(--text-dim);"><i class="fab fa-twitter"></i></a>
+    <footer class="main-footer">
+        <div class="footer-grid">
+            <div class="footer-about">
+                <img src="logopff.png" alt="xBlue logo" style="width: 50px;">
+                <h3>xBlue Studio</h3>
+                <p>نوفر لك أحدث المشاريع البرمجية والموارد الحصرية لتطوير مهاراتك.</p>
+            </div>
+            <div class="footer-links">
+                <h4>روابط سريعة</h4>
+                <ul>
+                    <li><a href="/">الرئيسية</a></li>
+                    <li><a href="projects">المشاريع</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>الدعم</h4>
+                <ul>
+                    <li><a href="terms.html">شروط الخدمة</a></li>
+                    <li><a href="privacy.html">سياسة الخصوصية</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>تواصل معنا</h4>
+                <div style="display: flex; gap: 15px; font-size: 20px;">
+                    <a href="https://discord.gg/6FxpkMTJtE" target="_blank" style="color: #5865f2;"><i class="fab fa-discord"></i></a>
+                    <a href="#" style="color: #fff;"><i class="fab fa-github"></i></a>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="footer-bottom">
-        <p>جميع الحقوق محفوظة &copy; 2026 xBlue Studio - صنع من طرف SF7 ❤️  </p>
-    </div>
-</footer>
+        <div class="footer-bottom">
+            <p>جميع الحقوق محفوظة &copy; 2026 xBlue Studio - صنع من طرف <b>SF7</b> ❤️</p>
+        </div>
+    </footer>
 
     <script>
-        // إعدادات Supabase
         const SUPABASE_URL = 'https://pqhdidvxjdjccknlwzit.supabase.co'; 
         const SUPABASE_KEY = 'sb_publishable_TJ4QJng8C74CeR8L0kh-vA_fDmV40rS'; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // رابط الدومين الخاص بك
-        const REDIRECT_URL = 'https://xbluestudio.qzz.io/dashboard.html';
-
-        document.getElementById('loginBtn').onclick = async () => {
-            const btn = document.getElementById('loginBtn');
-            const originalContent = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الاتصال...';
-            
+        // وظيفة تسجيل الدخول
+        async function login() {
             const { data, error } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'discord',
                 options: {
-                    scopes: 'identify guilds guilds.members.read', 
-                    redirectTo: REDIRECT_URL // تم التعديل للدومين المباشر
+                    redirectTo: 'https://xbluestudio.qzz.io/projects' // نستخدم الرابط النظيف هنا
                 }
             });
+            if (data.url) window.location.href = data.url;
+        }
 
-            if (error) {
-                alert('فشل تسجيل الدخول: ' + error.message);
-                btn.innerHTML = originalContent;
-            } else if (data.url) {
-                window.location.href = data.url; 
-            }
-        };
-
-        async function checkExistingSession() {
+        // فحص الجلسة فوراً عند التحميل
+        async function checkSession() {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
-                window.location.href = 'dashboard.html';
+                // إذا كان مسجلاً، اذهب للداشبورد فوراً
+                window.location.href = 'projects';
+            } else {
+                // إذا لم يكن مسجلاً، اخفِ الأوفرلاي واظهر الصفحة الرئيسية
+                document.getElementById('auth-overlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('auth-overlay').style.display = 'none';
+                }, 500);
             }
         }
-        checkExistingSession();
-        document.addEventListener('contextmenu', event => event.preventDefault());
 
-    // منع اختصارات المطورين (F12, Ctrl+Shift+I, Ctrl+U)
-    document.onkeydown = function(e) {
-        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
-            return false;
-        }
-    };
+        checkSession();
+
+        // حماية المحتوى
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = e => {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) return false;
+        };
     </script>
 </body>
 </html>
-
-
