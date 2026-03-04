@@ -149,16 +149,21 @@
 <body>
 
 <nav class="navbar">
-    <a href="/" class="nav-logo-container">
+    <div class="nav-logo-container">
         <img src="logopff.png" alt="xBlue Logo">
         <span>xBlue Studio</span>
-    </a>
+    </div>
+
+    <div class="nav-links">
+        <a href="#hero-section" class="nav-link active">الرئيسية</a>
+        <a href="#publicGrid" class="nav-link">المشاريع العامة</a>
+        <a href="#premiumGrid" class="nav-link">المشاريع الخاصة</a>
+        <a href="#adminSection" id="adminLink" class="nav-link" style="display: none;">لوحة النشر</a>
+    </div>
 
     <div style="display: flex; align-items: center; gap: 15px;">
         <div id="userInfo" class="user-pill"></div>
-        <button onclick="logout()" class="btn-danger" style="border-radius: 50%; width: 40px; height: 40px; border: none; cursor: pointer; background: #ed4245; color: white;">
-            <i class="fas fa-sign-out-alt"></i>
-        </button>
+        <button onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
     </div>
 </nav>
 
@@ -309,6 +314,7 @@
 
 </body>
 </html>
+
 
 
 
