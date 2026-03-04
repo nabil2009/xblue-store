@@ -133,7 +133,7 @@
                 <h4>روابط سريعة</h4>
                 <ul>
                     <li><a href="/">الرئيسية</a></li>
-                    <li><a href="projects">المشاريع</a></li>
+                    <li><a href="dashboard.html">المشاريع</a></li>
                 </ul>
             </div>
             <div class="footer-links">
@@ -166,7 +166,8 @@
             const { data, error } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'discord',
                 options: {
-                    redirectTo: 'https://xbluestudio.qzz.io/projects' // نستخدم الرابط النظيف هنا
+                    // التوجه إلى الملف الموجود فعلياً في المستودع الخاص بك
+                    redirectTo: 'https://xbluestudio.qzz.io/dashboard.html'
                 }
             });
             if (data.url) window.location.href = data.url;
@@ -175,14 +176,28 @@
         // فحص الجلسة فوراً عند التحميل
         async function checkSession() {
             const { data: { session } } = await supabaseClient.auth.getSession();
+            
+            // إصلاح حلقة التكرار: نتحقق إذا كان المستخدم مسجلاً وأين موقعه الحالي
             if (session) {
-                // إذا كان مسجلاً، اذهب للداشبورد فوراً
-                window.location.href = 'projects';
+                // إذا كان مسجلاً وهو في الصفحة الرئيسية (index.html أو /)
+                if (window.location.pathname === '/' || window.location.pathname.includes('index.html')) {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // إذا كان في صفحة أخرى، فقط أخفِ شاشة التحميل
+                    hideOverlay();
+                }
             } else {
-                // إذا لم يكن مسجلاً، اخفِ الأوفرلاي واظهر الصفحة الرئيسية
-                document.getElementById('auth-overlay').style.opacity = '0';
+                // إذا لم يكن مسجلاً، اظهر الصفحة الرئيسية (أخفِ الأوفرلاي)
+                hideOverlay();
+            }
+        }
+
+        function hideOverlay() {
+            const overlay = document.getElementById('auth-overlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
                 setTimeout(() => {
-                    document.getElementById('auth-overlay').style.display = 'none';
+                    overlay.style.display = 'none';
                 }, 500);
             }
         }
