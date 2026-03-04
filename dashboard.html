@@ -112,7 +112,20 @@
             color: var(--text-dim);
             font-size: 13px;
         }
+.footer-links ul li a {
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .footer-links ul li a:hover {
+        color: #5865F2 !important;
+        transform: translateX(-5px); /* حركة خفيفة لليمين عند التأشير */
+    }
 
+    .footer-links div a:hover {
+        transform: scale(1.2); /* تكبير أيقونات التواصل عند التأشير */
+        filter: brightness(1.2);
+    }
         /* أزرار وحقول */
         .btn-download {
             background: var(--primary);
@@ -177,20 +190,7 @@
     <h2 class="tab-title" style="color: #ffcc00;"><i class="fas fa-crown"></i> الخزنة الملكية</h2>
     <div id="premiumGrid" class="grid"></div>
 </div>
-<div class="footer-links">
-    <h4>روابط سريعة</h4>
-    <ul>
-        <li><a href="/">الرئيسية</a></li>
-        <li><a href="https://discord.gg/your-invite-link">سيرفر الديسكورد</a></li>
-        <li><a href="https://github.com/your-username">حساب الجيت هاب</a></li>
-    </ul>
-</div>
-<div class="footer-links">
-    <h4>الدعم</h4>
-    <ul>
-        <li><a href="/terms.html">شروط الخدمة</a></li> <li><a href="/privacy.html">سياسة الخصوصية</a></li> <li><a href="mailto:support@xbluestudio.qzz.io">تواصل عبر البريد</a></li>
-    </ul>
-</div>
+
 <footer class="main-footer">
     <div class="footer-grid">
         <div class="footer-about">
@@ -198,33 +198,37 @@
             <h3>xBlue Studio</h3>
             <p>المجتمع المتكامل للمبدعين والمطورين. نوفر لك أحدث المشاريع البرمجية والموارد الحصرية لتطوير مهاراتك وبناء مستقبلك التقني.</p>
         </div>
+
         <div class="footer-links">
             <h4>روابط سريعة</h4>
             <ul>
-                <li><a href="/">الرئيسية</a></li>
+                <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="#publicGrid">المشاريع العامة</a></li>
                 <li><a href="#premiumGrid">المشاريع الخاصة</a></li>
             </ul>
         </div>
+
         <div class="footer-links">
             <h4>الدعم</h4>
             <ul>
-                <li><a href="#">شروط الخدمة</a></li>
-                <li><a href="#">سياسة الخصوصية</a></li>
-                <li><a href="https://discord.gg/6FxpkMTJtE">Discord Support</a></li>
+                <li><a href="terms.html">شروط الخدمة</a></li>
+                <li><a href="privacy.html">سياسة الخصوصية</a></li>
+                <li><a href="https://discord.gg/6FxpkMTJtE" target="_blank">Discord Support</a></li>
             </ul>
         </div>
+
         <div class="footer-links">
             <h4>تواصل معنا</h4>
-            <div style="display: flex; gap: 15px; font-size: 20px;">
-                <a href="#" style="color: var(--text-dim);"><i class="fab fa-discord"></i></a>
-                <a href="#" style="color: var(--text-dim);"><i class="fab fa-github"></i></a>
-                <a href="#" style="color: var(--text-dim);"><i class="fab fa-twitter"></i></a>
+            <div style="display: flex; gap: 15px; font-size: 24px; margin-top: 10px;">
+                <a href="https://discord.gg/6FxpkMTJtE" target="_blank" style="color: #5865F2; transition: 0.3s;"><i class="fab fa-discord"></i></a>
+                <a href="https://github.com/your-github" target="_blank" style="color: var(--text-dim); transition: 0.3s;"><i class="fab fa-github"></i></a>
+                <a href="https://twitter.com/your-twitter" target="_blank" style="color: #1DA1F2; transition: 0.3s;"><i class="fab fa-twitter"></i></a>
             </div>
         </div>
     </div>
+
     <div class="footer-bottom">
-        <p>جميع الحقوق محفوظة &copy; 2026 xBlue Studio - صنع من طرف SF7 ❤️  </p>
+        <p>جميع الحقوق محفوظة &copy; 2026 xBlue Studio - صنع من طرف <b>SF7</b> ❤️</p>
     </div>
 </footer>
 
@@ -305,5 +309,6 @@
 
 </body>
 </html>
+
 
 
