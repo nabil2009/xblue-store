@@ -2,35 +2,193 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>شروط الخدمة | xBlue Studio</title>
+    
     <link rel="icon" type="image/png" href="logopff.png">
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        body { background: #0a0b0c; color: white; font-family: sans-serif; padding: 50px 10%; line-height: 1.8; }
-        .content-box { background: #16181a; padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        h1 { color: #5865F2; }
-        h2 { color: #fff; margin-top: 30px; border-right: 4px solid #5865F2; padding-right: 15px; }
-        .back-btn { display: inline-block; color: #5865F2; text-decoration: none; margin-bottom: 20px; }
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --bg-dark: #0a0b0c;
+            --card-bg: #16181a;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        * { transition: all 0.3s ease; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 8%;
+            line-height: 1.8;
+            background-image: radial-gradient(circle at top right, #1a1c3a 0%, #0a0b0c 50%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* زر العودة المطور */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-bottom: 30px;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            transform: translateX(-5px);
+            background: rgba(88,101,242,0.05);
+        }
+
+        /* الصندوق الرئيسي */
+        .content-box {
+            background: var(--card-bg);
+            padding: 60px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-box::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; width: 100%; height: 5px;
+            background: linear-gradient(to left, var(--primary), transparent);
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header-section img {
+            width: 80px;
+            filter: drop-shadow(0 0 10px var(--primary));
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .last-update {
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* العناوين الجانبية */
+        h2 {
+            color: #fff;
+            font-size: 22px;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h2 i {
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        p {
+            color: var(--text-dim);
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* تذييل الصفحة */
+        .footer-note {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        b { color: var(--primary); }
+
+        @media (max-width: 768px) {
+            body { padding: 20px 5%; }
+            .content-box { padding: 30px; }
+            h1 { font-size: 26px; }
+        }
     </style>
 </head>
 <body>
-    <a href="/" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
-    <div class="content-box">
-        <h1>شروط الخدمة (Terms of Service)</h1>
-        <p>آخر تحديث: 2026</p>
-        
-        <h2>1. قبول الشروط</h2>
-        <p>باستخدامك لموقع xBlue Studio، فإنك توافق على الالتزام الكامل بهذه الشروط. إذا كنت لا توافق، يرجى عدم استخدام الموقع.</p>
 
-        <h2>2. حقوق الملكية</h2>
-        <p>جميع المشاريع المرفوعة هي ملك لـ xBlue Studio أو المطورين المشاركين (SF7). يمنع إعادة بيع الأكواد دون إذن كتابي رسمي.</p>
+    <div class="container">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-chevron-right"></i> العودة للرئيسية
+        </a>
 
-        <h2>3. المشاريع الخاصة (Premium)</h2>
-        <p>الوصول للمشاريع الخاصة يتطلب رتبة معينة في سيرفر الديسكورد، ويحق للإدارة سحب الوصول في حال مخالفة القوانين.</p>
+        <div class="content-box">
+            <div class="header-section">
+                <img src="logopff.png" alt="xBlue Logo">
+                <h1>شروط الخدمة (Terms of Service)</h1>
+                <div class="last-update">آخر تحديث: مارس 2026</div>
+            </div>
+            
+            <p>مرحباً بك في <b>xBlue Studio</b>. يرجى قراءة هذه الشروط بعناية قبل استخدام موقعنا أو خدماتنا. باستخدامك للمنصة، فإنك تقر بموافقتك على هذه البنود.</p>
 
-        <h2>4. إخلاء المسؤولية</h2>
-        <p>نحن نوفر الأكواد "كما هي". لا نتحمل مسؤولية أي ضرر ناتج عن الاستخدام الخاطئ للأكواد أو الثغرات الناتجة عن تعديلات المستخدم.</p>
+            <h2><i class="fas fa-check-circle"></i> 1. قبول الشروط</h2>
+            <p>بمجرد الدخول إلى الموقع أو تسجيل الدخول عبر Discord، فإنك تلتزم قانونياً بجميع الشروط المذكورة هنا. إذا كنت لا توافق على أي جزء منها، يجب عليك التوقف فوراً عن استخدام المنصة.</p>
+
+            <h2><i class="fas fa-shield-alt"></i> 2. حقوق الملكية الفكرية</h2>
+            <p>جميع الأكواد، التصاميم، اللوجوهات، والمحتويات المرفوعة هي ملك حصري لـ <b>xBlue Studio</b> والمطور <b>SF7</b>. يمنع منعاً باتاً إعادة توزيع أو بيع أو نشر المشاريع المدفوعة (Premium) دون الحصول على إذن خطي مسبق.</p>
+
+            <h2><i class="fas fa-crown"></i> 3. العضوية والمشاريع الخاصة</h2>
+            <p>الوصول إلى "الخزنة الملكية" يعتمد على رتبتك في سيرفر Discord الخاص بنا. يحق للإدارة سحب الوصول أو حظر الحساب في حال تبين وجود محاولات لتسريب الملفات أو إساءة استخدام الخدمة.</p>
+
+            <h2><i class="fas fa-exclamation-triangle"></i> 4. إخلاء المسؤولية</h2>
+            <p>يتم توفير جميع الأدوات والأكواد "كما هي" دون ضمانات صريحة أو ضمنية. نحن لا نتحمل المسؤولية عن أي أضرار قد تلحق بسيرفراتك أو بياناتك نتيجة الاستخدام الخاطئ للأكواد أو التعديلات غير المدروسة عليها.</p>
+
+            <h2><i class="fas fa-user-slash"></i> 5. سياسة الاستخدام العادل</h2>
+            <p>يمنع استخدام الموقع لأي غرض غير قانوني، أو محاولة اختراق قاعدة البيانات، أو التلاعب بنظام النقاط والرتب. أي محاولة من هذا النوع ستؤدي لحظر دائم لآي بي (IP) المستخدم.</p>
+
+            <div class="footer-note">
+                <p>إذا كان لديك أي استفسار حول هذه الشروط، يمكنك التواصل معنا عبر <a href="https://discord.gg/6FxpkMTJtE" style="color:var(--primary); text-decoration:none;">Discord Support</a>.</p>
+                <p>جميع الحقوق محفوظة لـ <b>xBlue Studio</b> &copy; 2026</p>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // منع فحص العنصر لحماية النصوص
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = e => {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) return false;
+        };
+    </script>
 </body>
 </html>
