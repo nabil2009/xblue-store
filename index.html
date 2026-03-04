@@ -162,6 +162,30 @@
             .cta-container { flex-direction: column; width: 100%; }
             .discord-btn { justify-content: center; }
         }
+                .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-about img { width: 60px; margin-bottom: 15px; }
+        .footer-about p { color: var(--text-dim); line-height: 1.6; font-size: 14px; }
+        
+        .footer-links h4 { color: #fff; margin-bottom: 20px; font-size: 18px; }
+        .footer-links ul { list-style: none; padding: 0; }
+        .footer-links ul li { margin-bottom: 12px; }
+        .footer-links ul li a { color: var(--text-dim); text-decoration: none; transition: 0.3s; font-size: 14px; }
+        .footer-links ul li a:hover { color: var(--primary); padding-right: 5px; }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+
     </style>
 </head>
 <body>
@@ -217,9 +241,42 @@
         </div>
     </section>
 
-    <footer style="text-align: center; padding: 40px; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.05);">
-        <p>جميع الحقوق محفوظة &copy; 2026 xBlue Studio - المجتمع المتكامل للمبدعين</p>
-    </footer>
+<footer class="main-footer">
+    <div class="footer-grid">
+        <div class="footer-about">
+            <img src="logopff.png" alt="xBlue logo">
+            <h3>xBlue Studio</h3>
+            <p>المجتمع المتكامل للمبدعين والمطورين. نوفر لك أحدث المشاريع البرمجية والموارد الحصرية لتطوير مهاراتك وبناء مستقبلك التقني.</p>
+        </div>
+        <div class="footer-links">
+            <h4>روابط سريعة</h4>
+            <ul>
+                <li><a href="/">الرئيسية</a></li>
+                <li><a href="#publicGrid">المشاريع العامة</a></li>
+                <li><a href="#premiumGrid">المشاريع الخاصة</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>الدعم</h4>
+            <ul>
+                <li><a href="#">شروط الخدمة</a></li>
+                <li><a href="#">سياسة الخصوصية</a></li>
+                <li><a href="https://discord.gg/6FxpkMTJtE">Discord Support</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>تواصل معنا</h4>
+            <div style="display: flex; gap: 15px; font-size: 20px;">
+                <a href="#" style="color: var(--text-dim);"><i class="fab fa-discord"></i></a>
+                <a href="#" style="color: var(--text-dim);"><i class="fab fa-github"></i></a>
+                <a href="#" style="color: var(--text-dim);"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>جميع الحقوق محفوظة &copy; 2026 xBlue Studio - صنع من طرف SF7 ❤️  </p>
+    </div>
+</footer>
 
     <script>
         // إعدادات Supabase
@@ -269,4 +326,5 @@
     </script>
 </body>
 </html>
+
 
