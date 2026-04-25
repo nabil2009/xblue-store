@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xBlueHook Beta | Webhook Manager </title>
+    <link rel="icon" type="image/png" href="icone.png">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-body: #0f1011; --bg-side: #1e1f22; --bg-card: #2b2d31;
+            --accent: #5865f2; --accent-hover: #4752c4;
+            --text-main: #f2f3f5; --text-muted: #949ba4;
+            --danger: #ff4655; --success: #23a559;
+            --discord-bg: #313338; --radius: 10px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; direction: ltr !important; }
+        body { background-color: var(--bg-body); color: var(--text-main); font-family: 'Plus Jakarta Sans', 'Tajawal', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* --- Navigation --- */
+        nav { height: 65px; background: var(--bg-side); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-bottom: 1px solid rgba(0,0,0,0.3); z-index: 1000; }
+        .logo { font-weight: 800; font-size: 1.4rem; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+        .logo span { color: white; opacity: 0.5; font-size: 0.8rem; font-weight: 400; }
+        .nav-right { display: flex; gap: 12px; align-items: center; }
+        .custom-select { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; outline: none; }
+
+        /* --- Layout --- */
+        .main-content { display: flex; flex: 1; overflow: hidden; }
+        .editor-side { width: 480px; background: var(--bg-side); padding: 25px; overflow-y: auto; border-right: 1px solid rgba(0,0,0,0.5); padding-bottom: 100px; }
+        .preview-side { flex: 1; background: var(--discord-bg); padding: 40px 20px; overflow-y: auto; display: flex; justify-content: center; }
+
+        /* --- Editor Styles --- */
+        .section-label { font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--text-muted); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; margin-top: 20px; }
+        .input-group { background: var(--bg-card); padding: 18px; border-radius: var(--radius); margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        input, textarea { width: 100%; background: var(--bg-body); border: 1px solid #111; padding: 12px; color: white; border-radius: 8px; margin-bottom: 10px; outline: none; font-family: inherit; font-size: 14px; }
+        input:focus { border-color: var(--accent); }
+
+        /* --- DISCORD PREVIEW SYSTEM --- */
+        .discord-msg { display: flex; width: 100%; max-width: 700px; padding: 10px; }
+        .p-avatar-container { width: 40px; height: 40px; margin-right: 16px; flex-shrink: 0; }
+        .p-avatar { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-position: center; }
+        .msg-body { flex: 1; min-width: 0; }
+        .user-info { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .p-name { font-weight: 500; color: white; }
+        .p-bot-tag { background: var(--accent); color: white; font-size: 10px; padding: 1px 4px; border-radius: 3px; font-weight: 600; }
+        .p-time { color: var(--text-muted); font-size: 12px; }
+        .p-content-text { color: #dbdee1; font-size: 1rem; line-height: 1.375rem; white-space: pre-wrap; margin-bottom: 8px; }
+
+        /* Multi-Embed Layout */
+        .embed-wrapper { display: flex; flex-direction: column; gap: 10px; }
+        .embed-container { background: #2b2d31; border-radius: 4px; border-left: 4px solid var(--accent); display: flex; flex-direction: column; max-width: 520px; position: relative; }
+        
+        .embed-content-block { display: flex; padding: 12px; position: relative; }
+        .embed-text-part { flex: 1; }
+        .p-emb-author { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: white; }
+        .p-emb-author img { width: 22px; height: 22px; border-radius: 50%; }
+        .p-emb-title { color: #00a8fc; font-weight: 600; font-size: 1rem; margin-bottom: 4px; }
+        .p-emb-desc { font-size: 14px; color: #dbdee1; line-height: 1.1; }
+        
+        .p-emb-thumbnail { margin-left: 12px; flex-shrink: 0; }
+        .p-emb-thumbnail img { width: 80px; height: 80px; border-radius: 4px; object-fit: cover; }
+
+        .p-emb-image-container { padding: 0 12px 12px 12px; }
+        .p-emb-image-container img { max-width: 100%; border-radius: 4px; display: block; }
+
+        .p-emb-footer { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #949ba4; padding: 0 12px 12px 12px; }
+        .p-emb-footer img { width: 18px; height: 18px; border-radius: 50%; }
+
+        /* --- UI Components --- */
+        .actions-shelf { position: fixed; bottom: 0; left: 0; right: 0; height: 80px; background: #1e1f22; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: center; align-items: center; gap: 15px; z-index: 2000; }
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
+
+        .support-btn { position: fixed; bottom: 95px; right: 25px; background: #5865f2; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 22px; text-decoration: none; z-index: 3000; transition: 0.3s; }
+        
+        #toast { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); padding: 15px 30px; border-radius: 50px; color: white; font-weight: 700; display: none; z-index: 9999; }
+        .spinner { width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+.logo-img {
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
+    margin-right: 12px;
+    /* فلتر دقيق جداً للون #5865f2 */
+    filter: invert(44%) sepia(91%) saturate(1243%) hue-rotate(212deg) brightness(95%) contrast(105%) 
+            drop-shadow(0 0 5px rgba(88, 101, 242, 0.6));
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--accent); /* يضمن أن النص أيضاً بنفس اللون */
+}t-weight: 800;
+
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">
+        <img src="https://cdn-icons-png.flaticon.com/512/10085/10085077.png" class="logo-img" alt="Logo">
+        xBlueHook <span style="margin-left: 10px;">vBeta</span>
+    </div>
+    
+    <div class="nav-right">
+        <select class="custom-select" id="lang-select" onchange="changeLanguage()">
+            <option value="en">🇺🇸 English</option>
+            <option value="ar">🇸🇦 العربية</option>
+        </select>
+    </div>
+</nav>
+
+<div class="main-content">
+    <aside class="editor-side">
+        <div class="section-label"><i class="fa-solid fa-link"></i> <span id="txt-sec-1">Webhook Settings</span></div>
+        <div class="input-group">
+            <input type="text" id="url" placeholder="Webhook URL">
+            <input type="text" id="username" placeholder="Bot Name" oninput="updatePreview()">
+            <input type="text" id="avatar" placeholder="Avatar URL" oninput="updatePreview()">
+        </div>
+
+        <div class="section-label"><i class="fa-solid fa-message"></i> <span id="txt-sec-2">Content</span></div>
+        <textarea id="content" rows="3" placeholder="Message..." oninput="updatePreview()"></textarea>
+
+        <div id="embeds-editor-container"></div>
+
+        <button class="btn-tool" style="width: 100%; border: 2px dashed #4e5058; padding: 15px; color: var(--text-muted); background: transparent; cursor: pointer; font-weight: 700; border-radius: 10px; margin-top: 10px;" onclick="addEmbed()">
+            <i class="fa-solid fa-plus"></i> <span id="txt-add-emb">Add Embed</span>
+        </button>
+    </aside>
+
+    <main class="preview-side">
+        <div class="discord-msg">
+            <div class="p-avatar-container">
+                <div class="p-avatar" id="p-avatar" style="background-image: url('https://cdn.discordapp.com/embed/avatars/0.png');"></div>
+            </div>
+            <div class="msg-body">
+                <div class="user-info">
+                    <span class="p-name" id="p-username">xBlueHook Bot</span>
+                    <span class="p-bot-tag">BOT</span>
+                    <span class="p-time">Today at 4:20 PM</span>
+                </div>
+                <div id="p-content" class="p-content-text">Welcome to xBlueHook V8!</div>
+                <div id="p-embeds-list" class="embed-wrapper"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="actions-shelf">
+    <button class="btn-secondary" onclick="copyJSON()" id="txt-json" style="background:#35363c; color:white; border:none; padding:12px 20px; border-radius:8px; cursor:pointer;">Copy JSON</button>
+    <button class="btn-primary" onclick="sendWebhook()" id="send-trigger">
+        <div class="spinner" id="loader"></div>
+        <i class="fa-solid fa-paper-plane" id="plane-icon"></i>
+        <span id="txt-send">Send to Discord</span>
+    </button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    const i18n = {
+        en: { sec1: "Webhook Settings", sec2: "Message Content", add: "Add New Embed", json: "Copy JSON", send: "Send to Discord", success: "Sent! ✅", error: "Error! ❌", copied: "Copied! 📋" },
+        ar: { sec1: "إعدادات الويب هوك", sec2: "محتوى الرسالة", add: "إضافة بطاقة جديدة", json: "نسخ الكود", send: "إرسال لديسكورد", success: "تم الإرسال! ✅", error: "فشل الإرسال! ❌", copied: "تم النسخ! 📋" }
+    };
+
+let lang = "en";
+    let embeds = [{ 
+        title: "Welcome to xBlueHook WebHook Manager! 🚀", 
+        desc: "The most powerful Discord Webhook manager. Create, edit, and send professional embeds easily.\n\nJoin our [Official Support Server](https://discord.gg/ebTnK5QR5) for help!", 
+        color: "#5865f2", 
+        author: "xBlueHook", 
+        authorImg: "icone.png", 
+        footer: "Powered by xBlueHook VBeta", 
+        footerImg: "icone.png", 
+        image: "", 
+        thumbnail: "icone.png" 
+    }];
+    function changeLanguage() { lang = document.getElementById('lang-select').value; applyTexts(); }
+    function applyTexts() { 
+        const s = i18n[lang];
+        document.getElementById('txt-sec-1').innerText = s.sec1;
+        document.getElementById('txt-sec-2').innerText = s.sec2;
+        document.getElementById('txt-add-emb').innerText = s.add;
+        document.getElementById('txt-json').innerText = s.json;
+        document.getElementById('txt-send').innerText = s.send;
+        renderEmbedEditor();
+    }
+
+function updatePreview() {
+    document.getElementById('p-username').innerText = document.getElementById('username').value || "xBlueHook Bot";
+    document.getElementById('p-avatar').style.backgroundImage = `url('${document.getElementById('avatar').value || 'icone.png'}')`;
+    document.getElementById('p-content').innerText = document.getElementById('content').value || "";
+
+    const list = document.getElementById('p-embeds-list');
+    list.innerHTML = '';
+    embeds.forEach(e => {
+        let text = e.desc || "";
+
+        // 1. تحويل الروابط [text](url)
+        text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color: #00a8fc; text-decoration: none; cursor: pointer;">$1</a>');
+
+        // 2. تحويل الخط العريض **bold**
+        text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+        // 3. تحويل الخط المائل *italic*
+        text = text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+        // 4. تحويل السطور الجديدة (الإنتر)
+        let formattedDesc = text.replace(/\n/g, '<br>');
+
+        list.innerHTML += `
+            <div class="embed-container" style="border-left-color: ${e.color}">
+                <div class="embed-content-block">
+                    <div class="embed-text-part">
+                        ${e.author ? `<div class="p-emb-author">${e.authorImg ? `<img src="${e.authorImg}">` : ''} <span>${e.author}</span></div>` : ''}
+                        ${e.title ? `<div class="p-emb-title">${e.title}</div>` : ''}
+                        ${formattedDesc ? `<div class="p-emb-desc">${formattedDesc}</div>` : ''}
+                    </div>
+                    ${e.thumbnail ? `<div class="p-emb-thumbnail"><img src="${e.thumbnail}"></div>` : ''}
+                </div>
+                ${e.image ? `<div class="p-emb-image-container"><img src="${e.image}"></div>` : ''}
+                <div class="p-emb-footer">
+                    <img src="icone.png"> <span>Powered by xBlueHook V8.0</span>
+                </div>
+            </div>
+        `;
+    });
+}
+
+    function renderEmbedEditor() {
+        const container = document.getElementById('embeds-editor-container');
+        container.innerHTML = '';
+        embeds.forEach((e, i) => {
+            container.innerHTML += `
+                <div class="section-label">Embed #${i+1} <i class="fa-solid fa-trash" style="margin-left:auto; cursor:pointer; color:var(--danger)" onclick="removeEmbed(${i})"></i></div>
+                <div class="input-group" style="border-top: 3px solid ${e.color}">
+                    <input type="text" placeholder="Embed Title" value="${e.title}" oninput="updateEmb(${i}, 'title', this.value)">
+                    <textarea placeholder="Description" oninput="updateEmb(${i}, 'desc', this.value)">${e.desc}</textarea>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+                        <input type="text" placeholder="Author" value="${e.author}" oninput="updateEmb(${i}, 'author', this.value)">
+                        <input type="text" placeholder="Author Icon" value="${e.authorImg}" oninput="updateEmb(${i}, 'authorImg', this.value)">
+                        <input type="text" placeholder="Image URL" value="${e.image}" oninput="updateEmb(${i}, 'image', this.value)">
+                        <input type="text" placeholder="Thumbnail URL" value="${e.thumbnail}" oninput="updateEmb(${i}, 'thumbnail', this.value)">
+                        <input type="text" placeholder="Footer Text" value="${e.footer}" oninput="updateEmb(${i}, 'footer', this.value)">
+                        <input type="text" placeholder="Footer Icon" value="${e.footerImg}" oninput="updateEmb(${i}, 'footerImg', this.value)">
+                    </div>
+                    <input type="color" value="${e.color}" oninput="updateEmb(${i}, 'color', this.value)" style="height:35px; margin-top:5px">
+                </div>
+            `;
+        });
+        updatePreview();
+    }
+
+    function updateEmb(i, key, val) { embeds[i][key] = val; updatePreview(); }
+    function addEmbed() { if(embeds.length < 10) { embeds.push({title:"", desc:"", color:"#5865f2", author:"", authorImg:"", footer:"", footerImg:"", image:"", thumbnail:""}); renderEmbedEditor(); } }
+    function removeEmbed(i) { embeds.splice(i, 1); renderEmbedEditor(); }
+
+    function showToast(msg, isError = false) {
+        const t = document.getElementById('toast');
+        t.innerText = msg; t.style.background = isError ? '#ff4655' : '#23a559';
+        t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    async function sendWebhook() {
+        const url = document.getElementById('url').value;
+        if(!url.includes('webhooks')) return showToast(i18n[lang].error, true);
+        document.getElementById('loader').style.display='block';
+        document.getElementById('plane-icon').style.display='none';
+
+        const payload = {
+            username: document.getElementById('username').value || undefined,
+            avatar_url: document.getElementById('avatar').value || undefined,
+            content: document.getElementById('content').value || "",
+              embeds: embeds.map(e => ({
+                title: e.title || undefined, description: e.desc || undefined,
+                color: parseInt(e.color.replace('#', ''), 16),
+                author: e.author ? { name: e.author, icon_url: e.authorImg || undefined } : undefined,
+                footer: e.footer ? { text: e.footer, icon_url: e.footerImg || undefined } : undefined,
+                image: e.image ? { url: e.image } : undefined,
+                thumbnail: e.thumbnail ? { url: e.thumbnail } : undefined
+            }))
+        };
+        try {
+            const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            if(res.ok) showToast(i18n[lang].success); else throw new Error();
+        } catch { showToast(i18n[lang].error, true); }
+        document.getElementById('loader').style.display='none';
+        document.getElementById('plane-icon').style.display='block';
+    }
+
+    function copyJSON() {
+        const data = { content: document.getElementById('content').value, embeds: embeds };
+        navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+        showToast(i18n[lang].copied);
+    }
+
+    applyTexts();
+</script>
+</body>
+</html>
