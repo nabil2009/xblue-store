@@ -1,160 +1,992 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>xBlue Marketplace</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سوق الخدمات - منصة الربط بين العملاء والبائعين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
 
-<style>
-body {
-  margin:0;
-  font-family:'Plus Jakarta Sans', sans-serif;
-  background:#0f1011;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-}
+        /* Navbar */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
 
-.container {
-  background:#1e1f22;
-  padding:40px;
-  border-radius:15px;
-  width:350px;
-  box-shadow:0 0 40px rgba(0,0,0,0.6);
-}
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-h2 {
-  text-align:center;
-  margin-bottom:20px;
-}
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-input {
-  width:100%;
-  padding:12px;
-  margin-bottom:10px;
-  border-radius:8px;
-  border:none;
-  background:#2b2d31;
-  color:white;
-}
+        .logo i {
+            margin-left: 10px;
+            background: none;
+            -webkit-text-fill-color: #667eea;
+        }
 
-button {
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:#5865f2;
-  color:white;
-  font-weight:600;
-  cursor:pointer;
-}
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
 
-button:hover {
-  background:#4752c4;
-}
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
 
-.switch {
-  text-align:center;
-  margin-top:10px;
-  cursor:pointer;
-  color:#949ba4;
-}
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+        }
 
-#msg {
-  text-align:center;
-  margin-top:10px;
-}
-</style>
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            background: white;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .search-box i {
+            padding: 1rem;
+            color: #667eea;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            outline: none;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+        }
+
+        .search-box button {
+            border-radius: 0;
+            padding: 1rem 2rem;
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 100px auto 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1.5rem;
+            color: #667eea;
+        }
+
+        .modal-content input, 
+        .modal-content select,
+        .modal-content textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+        }
+
+        .modal-content textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-content button {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .modal-content a {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            min-width: 150px;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .dropdown-menu a:hover {
+            background: #f5f5f5;
+        }
+
+        .user-menu:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* Cards */
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .order-card {
+            background: #f9fafb;
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            transition: transform 0.3s;
+        }
+
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .order-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-description {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .order-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .order-price {
+            color: #10b981;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .order-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-accepted {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .status-completed {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            border: none;
+            background: none;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #9ca3af;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .nav-links {
+                display: none;
+            }
+            .orders-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
-  <h2 id="title">Login</h2>
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-store"></i>
+            <span>سوق الخدمات</span>
+        </div>
+        <div class="nav-links">
+            <a onclick="showHome()" id="homeLink" class="active">الرئيسية</a>
+            <a onclick="showDashboard()" id="dashboardLink">لوحة التحكم</a>
+        </div>
+        <div class="auth-buttons" id="authButtons">
+            <button class="btn btn-outline" onclick="showLoginModal()">دخول</button>
+            <button class="btn btn-primary" onclick="showRegisterModal()">تسجيل</button>
+        </div>
+        <div class="user-menu" id="userMenu" style="display: none;">
+            <div class="user-avatar" id="userAvatar">A</div>
+            <span id="userName"></span>
+            <i class="fas fa-chevron-down"></i>
+            <div class="dropdown-menu">
+                <a onclick="showDashboard()">لوحة التحكم</a>
+                <a onclick="logout()">تسجيل خروج</a>
+            </div>
+        </div>
+    </div>
+</nav>
 
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
-
-  <button onclick="handleAuth()">Continue</button>
-
-  <div class="switch" onclick="toggleMode()">Create account</div>
-
-  <div id="msg"></div>
+<!-- Hero Section (Home) -->
+<div id="homeSection" class="hero">
+    <div class="hero-content">
+        <h1>ابحث عن الخدمات التي تحتاجها</h1>
+        <p>منصة تجمع بين العملاء والمبدعين في مكان واحد</p>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="ابحث عن مصمم، مبرمج، كاتب...">
+            <button class="btn btn-primary" onclick="searchOrders()">بحث</button>
+        </div>
+    </div>
+    <div id="homeOrdersContainer" style="max-width: 1200px; margin: 3rem auto 0;">
+        <h3 style="color: white; text-align: right;">📋 أحدث الطلبات</h3>
+        <div id="ordersList" class="orders-grid"></div>
+    </div>
 </div>
 
+<!-- Dashboard Section -->
+<div id="dashboardSection" class="dashboard-container" style="display: none;">
+    <h2 id="dashboardTitle">لوحة التحكم</h2>
+    <div id="dashboardContent"></div>
+</div>
+
+<!-- Modals -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeLoginModal()">&times;</span>
+        <h2>تسجيل الدخول</h2>
+        <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
+            <input type="password" id="loginPassword" placeholder="كلمة المرور" required>
+            <button type="submit" class="btn btn-primary">دخول</button>
+            <a onclick="showResetPassword()">نسيت كلمة المرور؟</a>
+        </form>
+    </div>
+</div>
+
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeRegisterModal()">&times;</span>
+        <h2>إنشاء حساب جديد</h2>
+        <form id="registerForm">
+            <input type="text" id="registerName" placeholder="الاسم الكامل" required>
+            <input type="email" id="registerEmail" placeholder="البريد الإلكتروني" required>
+            <input type="password" id="registerPassword" placeholder="كلمة المرور" required>
+            <select id="registerRole">
+                <option value="buyer">مشتري (أريد شراء خدمات)</option>
+                <option value="seller">بائع (أريد بيع خدمات)</option>
+            </select>
+            <div id="sellerFields" style="display: none;">
+                <select id="sellerSpecialization">
+                    <option value="developer">مبرمج</option>
+                    <option value="designer">مصمم</option>
+                    <option value="writer">كاتب محتوى</option>
+                    <option value="marketing">مسوق</option>
+                </select>
+                <textarea id="sellerBio" placeholder="نبذة عنك ومهاراتك..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">تسجيل</button>
+        </form>
+    </div>
+</div>
+
+<div id="resetModal" class="modal">
+    <div class="modal-content">
+        <h2>استعادة كلمة المرور</h2>
+        <form id="resetForm">
+            <input type="email" id="resetEmail" placeholder="البريد الإلكتروني" required>
+            <button type="submit" class="btn btn-primary">إرسال رابط الاستعادة</button>
+            <a onclick="closeResetModal()">عودة</a>
+        </form>
+    </div>
+</div>
+
+<div id="orderModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeOrderModal()">&times;</span>
+        <h2>إنشاء طلب جديد</h2>
+        <form id="orderForm">
+            <input type="text" id="orderTitle" placeholder="عنوان الطلب" required>
+            <textarea id="orderDescription" placeholder="وصف تفصيلي للخدمة المطلوبة..." required></textarea>
+            <input type="number" id="orderBudget" placeholder="الميزانية (ريال)" required>
+            <select id="orderSkill" required>
+                <option value="">اختر التخصص</option>
+                <option value="developer">مبرمج</option>
+                <option value="designer">مصمم</option>
+                <option value="writer">كاتب</option>
+                <option value="marketing">مسوق</option>
+            </select>
+            <button type="submit" class="btn btn-primary">إرسال الطلب</button>
+        </form>
+    </div>
+</div>
+
+<script type="importmap">
+    {
+        "imports": {
+            "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+            "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+        }
+    }
+</script>
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { initializeApp } from "firebase/app";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged, updateProfile } from "firebase/auth";
+    import { getFirestore, doc, setDoc, getDoc, getDocs, collection, query, where, orderBy, addDoc, updateDoc, serverTimestamp, deleteDoc } from "firebase/firestore";
 
-import {
-  getDatabase,
-  ref,
-  set
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    // Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyAUbpzyuACWNlDIkfe_A47sSQd_We41Gbk",
+        authDomain: "my-marketplace-c2cd7.firebaseapp.com",
+        databaseURL: "https://my-marketplace-c2cd7-default-rtdb.firebaseio.com",
+        projectId: "my-marketplace-c2cd7",
+        storageBucket: "my-marketplace-c2cd7.firebasestorage.app",
+        messagingSenderId: "649905836994",
+        appId: "1:649905836994:web:3e3d83a093c5216838fc5b",
+        measurementId: "G-WLSWQFPM8M"
+    };
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAUbpzyuACWNlDIkfe_A47sSQd_We41Gbk",
-  authDomain: "my-marketplace-c2cd7.firebaseapp.com",
-  databaseURL: "https://my-marketplace-c2cd7-default-rtdb.firebaseio.com",
-  projectId: "my-marketplace-c2cd7",
-  storageBucket: "my-marketplace-c2cd7.firebasestorage.app",
-  messagingSenderId: "649905836994",
-  appId: "1:649905836994:web:3e3d83a093c5216838fc5b"
-};
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
+    let currentUser = null;
+    let currentUserData = null;
 
-let isLogin = true;
-
-window.toggleMode = () => {
-  isLogin = !isLogin;
-  document.getElementById("title").innerText = isLogin ? "Login" : "Register";
-};
-
-window.handleAuth = async () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const msg = document.getElementById("msg");
-
-  try {
-    if (isLogin) {
-      // 🔐 تسجيل دخول
-      await signInWithEmailAndPassword(auth, email, password);
-      msg.innerText = "Logged in ✅";
-
-      // 🚀 تحويل للداشبورد
-      window.location.href = "dashboard.html";
-
-    } else {
-      // 🆕 إنشاء حساب
-      const userCred = await createUserWithEmailAndPassword(auth, email, password);
-
-      await set(ref(db, 'users/' + userCred.user.uid), {
-        email: email,
-        role: "buyer",
-        createdAt: Date.now()
-      });
-
-      msg.innerText = "Account created ✅";
-
-      // 🚀 تحويل للداشبورد
-      window.location.href = "dashboard.html";
+    // Helper Functions
+    function showMessage(msg, type = 'success') {
+        const container = document.getElementById('dashboardContent');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `alert alert-${type}`;
+        msgDiv.innerHTML = msg;
+        msgDiv.style.position = 'fixed';
+        msgDiv.style.top = '80px';
+        msgDiv.style.right = '20px';
+        msgDiv.style.zIndex = '9999';
+        document.body.appendChild(msgDiv);
+        setTimeout(() => msgDiv.remove(), 3000);
     }
 
-  } catch (e) {
-    msg.innerText = e.message;
-  }
-};
-</script>
-</body>
-</html>
+    window.showHome = () => {
+        document.getElementById('homeSection').style.display = 'block';
+        document.getElementById('dashboardSection').style.display = 'none';
+        document.getElementById('homeLink').classList.add('active');
+        document.getElementById('dashboardLink').classList.remove('active');
+        loadOrders();
+    };
+
+    window.showDashboard = async () => {
+        if (!currentUser) {
+            showMessage('يرجى تسجيل الدخول أولاً', 'error');
+            showLoginModal();
+            return;
+        }
+        document.getElementById('homeSection').style.display = 'none';
+        document.getElementById('dashboardSection').style.display = 'block';
+        document.getElementById('homeLink').classList.remove('active');
+        document.getElementById('dashboardLink').classList.add('active');
+        await loadDashboardContent();
+    };
+
+    window.showLoginModal = () => {
+        document.getElementById('loginModal').style.display = 'block';
+    };
+
+    window.closeLoginModal = () => {
+        document.getElementById('loginModal').style.display = 'none';
+    };
+
+    window.showRegisterModal = () => {
+        document.getElementById('registerModal').style.display = 'block';
+    };
+
+    window.closeRegisterModal = () => {
+        document.getElementById('registerModal').style.display = 'none';
+    };
+
+    window.showResetPassword = () => {
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('resetModal').style.display = 'block';
+    };
+
+    window.closeResetModal = () => {
+        document.getElementById('resetModal').style.display = 'none';
+    };
+
+    window.closeOrderModal = () => {
+        document.getElementById('orderModal').style.display = 'none';
+    };
+
+    window.showOrderModal = () => {
+        if (!currentUser) {
+            showMessage('يرجى تسجيل الدخول أولاً', 'error');
+            showLoginModal();
+            return;
+        }
+        document.getElementById('orderModal').style.display = 'block';
+    };
+
+    window.logout = async () => {
+        await signOut(auth);
+        showMessage('تم تسجيل الخروج بنجاح');
+        showHome();
+    };
+
+    window.searchOrders = () => {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        loadOrders(searchTerm);
+    };
+
+    // Load Orders for Home
+    async function loadOrders(searchTerm = '') {
+        const ordersContainer = document.getElementById('ordersList');
+        ordersContainer.innerHTML = '<div class="loading">جاري التحميل...</div>';
+        
+        try {
+            let ordersQuery = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+            const querySnapshot = await getDocs(ordersQuery);
+            const orders = [];
+            querySnapshot.forEach(doc => {
+                orders.push({ id: doc.id, ...doc.data() });
+            });
+            
+            let filteredOrders = orders;
+            if (searchTerm) {
+                filteredOrders = orders.filter(order => 
+                    order.title?.toLowerCase().includes(searchTerm) || 
+                    order.description?.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (filteredOrders.length === 0) {
+                ordersContainer.innerHTML = '<div class="loading">لا توجد طلبات حالياً</div>';
+                return;
+            }
+            
+            ordersContainer.innerHTML = filteredOrders.map(order => `
+                <div class="order-card">
+                    <div class="order-title">${order.title || 'طلب بدون عنوان'}</div>
+                    <div class="order-description">${order.description?.substring(0, 100) || 'لا يوجد وصف'}</div>
+                    <div class="order-meta">
+                        <span class="order-price">💰 ${order.budget || 0} ريال</span>
+                        <span class="order-status status-${order.status || 'pending'}">${getStatusText(order.status)}</span>
+                    </div>
+                    <small>👤 ${order.buyerName || 'مستخدم'}</small>
+                    ${currentUser && currentUserData?.role === 'seller' && order.status === 'pending' ? 
+                        `<button class="btn btn-primary" style="margin-top: 1rem; width: 100%;" onclick="acceptOrder('${order.id}')">قبول الطلب</button>` : ''}
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading orders:', error);
+            ordersContainer.innerHTML = '<div class="loading">حدث خطأ في تحميل الطلبات</div>';
+        }
+    }
+
+    function getStatusText(status) {
+        const statusMap = {
+            'pending': 'قيد الانتظار',
+            'accepted': 'تم القبول',
+            'in_progress': 'قيد التنفيذ',
+            'completed': 'مكتمل',
+            'cancelled': 'ملغي'
+        };
+        return statusMap[status] || status;
+    }
+
+    window.acceptOrder = async (orderId) => {
+        if (!currentUser) return;
+        try {
+            await updateDoc(doc(db, 'orders', orderId), {
+                status: 'accepted',
+                sellerId: currentUser.uid,
+                sellerName: currentUser.displayName,
+                acceptedAt: serverTimestamp()
+            });
+            showMessage('تم قبول الطلب بنجاح!');
+            loadOrders();
+            loadDashboardContent();
+        } catch (error) {
+            showMessage('خطأ: ' + error.message, 'error');
+        }
+    };
+
+    // Dashboard Content
+    async function loadDashboardContent() {
+        const container = document.getElementById('dashboardContent');
+        if (!currentUserData) {
+            container.innerHTML = '<div class="loading">جاري التحميل...</div>';
+            return;
+        }
+
+        if (currentUserData.role === 'buyer') {
+            // Buyer Dashboard
+            const ordersQuery = query(collection(db, 'orders'), where('buyerId', '==', currentUser.uid), orderBy('createdAt', 'desc'));
+            const ordersSnapshot = await getDocs(ordersQuery);
+            const myOrders = [];
+            ordersSnapshot.forEach(doc => myOrders.push({ id: doc.id, ...doc.data() }));
+
+            container.innerHTML = `
+                <div class="tabs">
+                    <button class="tab active" onclick="showBuyerOrders()">طلباتي</button>
+                    <button class="tab" onclick="showNewOrderForm()">طلب جديد</button>
+                </div>
+                <div id="buyerContent">
+                    ${myOrders.length === 0 ? 
+                        '<div class="loading">لا توجد طلبات حالياً. قم بإنشاء طلب جديد!</div>' :
+                        `<div class="orders-grid">
+                            ${myOrders.map(order => `
+                                <div class="order-card">
+                                    <div class="order-title">${order.title}</div>
+                                    <div class="order-description">${order.description}</div>
+                                    <div class="order-meta">
+                                        <span class="order-price">💰 ${order.budget} ريال</span>
+                                        <span class="order-status status-${order.status}">${getStatusText(order.status)}</span>
+                                    </div>
+                                    ${order.sellerName ? `<small>📌 تم القبول بواسطة: ${order.sellerName}</small>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>`
+                    }
+                </div>
+            `;
+        } 
+        else if (currentUserData.role === 'seller') {
+            // Seller Dashboard
+            const specialization = currentUserData.sellerProfile?.specialization || 'developer';
+            const availableQuery = query(collection(db, 'orders'), where('status', '==', 'pending'), where('requiredSkill', '==', specialization));
+            const myAcceptedQuery = query(collection(db, 'orders'), where('sellerId', '==', currentUser.uid));
+            
+            const [availableSnapshot, myAcceptedSnapshot] = await Promise.all([
+                getDocs(availableQuery),
+                getDocs(myAcceptedQuery)
+            ]);
+            
+            const availableOrders = [];
+            availableSnapshot.forEach(doc => availableOrders.push({ id: doc.id, ...doc.data() }));
+            
+            const myAcceptedOrders = [];
+            myAcceptedSnapshot.forEach(doc => myAcceptedOrders.push({ id: doc.id, ...doc.data() }));
+
+            container.innerHTML = `
+                <div class="tabs">
+                    <button class="tab active" onclick="showAvailableOrders()">🆕 الطلبات المتاحة</button>
+                    <button class="tab" onclick="showMyAcceptedOrders()">✅ طلباتي المقبولة</button>
+                </div>
+                <div id="sellerContent">
+                    <div class="orders-grid">
+                        ${availableOrders.map(order => `
+                            <div class="order-card">
+                                <div class="order-title">${order.title}</div>
+                                <div class="order-description">${order.description}</div>
+                                <div class="order-meta">
+                                    <span class="order-price">💰 ${order.budget} ريال</span>
+                                    <span class="order-status status-pending">متاح</span>
+                                </div>
+                                <small>👤 طلب من: ${order.buyerName || 'عميل'}</small>
+                                <button class="btn btn-primary" style="margin-top: 1rem; width: 100%;" onclick="acceptOrder('${order.id}')">قبول الطلب</button>
+                            </div>
+                        `).join('')}
+                        ${availableOrders.length === 0 ? '<div class="loading">لا توجد طلبات متاحة حالياً في تخصصك</div>' : ''}
+                    </div>
+                </div>
+            `;
+        }
+        else if (currentUserData.role === 'owner') {
+            // Owner Dashboard
+            const usersSnapshot = await getDocs(collection(db, 'users'));
+            const ordersSnapshot = await getDocs(collection(db, 'orders'));
+            
+            container.innerHTML = `
+                <h3>📊 إحصائيات المنصة</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem; border-radius: 15px;">
+                        <h4>👥 المستخدمين</h4>
+                        <p style="font-size: 2rem; font-weight: bold;">${usersSnapshot.size}</p>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 1.5rem; border-radius: 15px;">
+                        <h4>📋 الطلبات</h4>
+                        <p style="font-size: 2rem; font-weight: bold;">${ordersSnapshot.size}</p>
+                    </div>
+                </div>
+                <h3>👤 إدارة المستخدمين</h3>
+                <div id="usersList"></div>
+            `;
+            
+            const usersContainer = document.getElementById('usersList');
+            const users = [];
+            usersSnapshot.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
+            
+            usersContainer.innerHTML = `
+                <div class="orders-grid">
+                    ${users.map(user => `
+                        <div class="order-card">
+                            <div class="order-title">${user.name || user.email}</div>
+                            <p>📧 ${user.email}</p>
+                            <p>⭐ الدور: ${user.role || 'buyer'}</p>
+                            <select id="role-${user.id}" class="form-group">
+                                <option value="buyer" ${user.role === 'buyer' ? 'selected' : ''}>مشتري</option>
+                                <option value="seller" ${user.role === 'seller' ? 'selected' : ''}>بائع</option>
+                                <option value="owner" ${user.role === 'owner' ? 'selected' : ''}>أونر</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="updateUserRole('${user.id}')">تحديث الدور</button>
+                            <button class="btn btn-danger" onclick="deleteUser('${user.id}')" style="margin-top: 0.5rem;">حذف المستخدم</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+    }
+
+    window.updateUserRole = async (userId) => {
+        const newRole = document.getElementById(`role-${userId}`).value;
+        try {
+            await updateDoc(doc(db, 'users', userId), { role: newRole });
+            showMessage('تم تحديث دور المستخدم بنجاح');
+            loadDashboardContent();
+        } catch (error) {
+            showMessage('خطأ: ' + error.message, 'error');
+        }
+    };
+
+    window.deleteUser = async (userId) => {
+        if (confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
+            try {
+                await deleteDoc(doc(db, 'users', userId));
+                showMessage('تم حذف المستخدم بنجاح');
+                loadDashboardContent();
+            } catch (error) {
+                showMessage('خطأ: ' + error.message, 'error');
+            }
+        }
+    };
+
+    // Create Order
+    document.getElementById('orderForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('orderTitle').value;
+        const description = document.getElementById('orderDescription').value;
+        const budget = parseInt(document.getElementById('orderBudget').value);
+        const requiredSkill = document.getElementById('orderSkill').value;
+        
+        try {
+            await addDoc(collection(db, 'orders'), {
+                title,
+                description,
+                budget,
+                requiredSkill,
+                buyerId: currentUser.uid,
+                buyerName: currentUser.displayName,
+                status: 'pending',
+                createdAt: serverTimestamp()
+            });
+            showMessage('تم إنشاء الطلب بنجاح!');
+            closeOrderModal();
+            loadDashboardContent();
+            loadOrders();
+        } catch (error) {
+            showMessage('خطأ: ' + error.message, 'error');
+        }
+    });
+
+    // Register Form
+    document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('registerName').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const role = document.getElementById('registerRole').value;
+        
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            await updateProfile(user, { displayName: name });
+            
+            const userData = {
+                uid: user.uid,
+                name: name,
+                email: email,
+                role: role,
+                createdAt: new Date().toISOString(),
+                isActive: true
+            };
+            
+            if (role === 'seller') {
+                userData.sellerProfile = {
+                    specialization: document.getElementById('sellerSpecialization').value,
+                    bio: document.getElementById('sellerBio').value,
+                    rating: 0,
+                    totalRatings: 0,
+                    completedOrders: 0
+                };
+            }
+            
+            await setDoc(doc(db, 'users', user.uid), userData);
+            showMessage('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول');
+            closeRegisterModal();
+        } catch (error) {
+            showMessage('خطأ: ' + error.message, 'error');
+        }
+    });
+
+    // Login Form
+    document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        try {
+            const userCredential = await
