@@ -1,175 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>xBlue Marketplace</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root {
-  --bg:#0f1011;
-  --card:#1e1f22;
+:root{
+  --bg:#0b0c0f;
+  --panel:#111218;
+  --card:#171922;
+  --border:#222532;
   --accent:#5865f2;
-  --text:#fff;
-  --muted:#949ba4;
+  --text:#eef1f6;
+  --muted:#8b93a7;
+  --success:#23a559;
+  --danger:#ff4655;
 }
 
-body {
+*{box-sizing:border-box}
+body{
   margin:0;
-  font-family:'Plus Jakarta Sans';
+  font-family:'Inter',sans-serif;
   background:var(--bg);
   color:var(--text);
   display:flex;
+  height:100vh;
 }
 
 /* Sidebar */
-.sidebar {
-  width:220px;
-  background:#111;
-  height:100vh;
+.sidebar{
+  width:250px;
+  background:var(--panel);
+  border-right:1px solid var(--border);
   padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
 }
-
-.sidebar h2 {
+.logo{
+  font-weight:700;
+  font-size:18px;
   color:var(--accent);
 }
-
-.sidebar button {
+.nav button{
   width:100%;
-  margin-top:10px;
-  background:#2b2d31;
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--muted);
+  padding:10px;
+  border-radius:8px;
+  text-align:left;
+  cursor:pointer;
+}
+.nav button:hover{
+  border-color:var(--accent);
+  color:white;
 }
 
 /* Main */
-.main {
+.main{
   flex:1;
-  padding:20px;
+  display:flex;
+  flex-direction:column;
 }
 
-.card {
+/* Topbar */
+.topbar{
+  height:60px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  background:var(--panel);
+}
+.user{
+  color:var(--muted);
+}
+
+/* Content */
+.content{
+  padding:25px;
+  overflow:auto;
+}
+
+/* Cards */
+.card{
   background:var(--card);
-  padding:20px;
+  border:1px solid var(--border);
   border-radius:12px;
+  padding:20px;
   margin-bottom:20px;
 }
 
-input, textarea {
+/* Grid */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+/* Inputs */
+input, textarea{
   width:100%;
-  padding:10px;
   margin-top:10px;
+  padding:10px;
+  background:#0f1117;
+  border:1px solid var(--border);
   border-radius:8px;
-  border:none;
-  background:#2b2d31;
   color:white;
 }
+input:focus, textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+}
 
-button {
+/* Buttons */
+.btn{
   margin-top:10px;
-  padding:10px;
+  padding:10px 15px;
   border:none;
   border-radius:8px;
-  background:var(--accent);
-  color:white;
   cursor:pointer;
+  font-weight:500;
 }
+.btn-primary{background:var(--accent); color:white;}
+.btn-ghost{background:transparent; border:1px solid var(--border); color:var(--muted);}
+.btn-ghost:hover{border-color:var(--accent); color:white;}
 
-.order {
-  background:#2b2d31;
+/* Orders */
+.order{
+  border:1px solid var(--border);
   padding:15px;
   border-radius:10px;
   margin-top:10px;
 }
-
-.badge {
+.order-top{
+  display:flex;
+  justify-content:space-between;
+}
+.status{
   font-size:12px;
   padding:3px 8px;
   border-radius:6px;
-  background:#23a559;
 }
-
-/* Chat */
-.chat {
-  height:200px;
-  overflow:auto;
-  background:#111;
-  padding:10px;
-  border-radius:8px;
-}
-
-.msg {margin:5px 0;}
-
-.star {
-  cursor:pointer;
-  font-size:18px;
-  color:gold;
-}
+.open{background:#2b2d31;}
+.accepted{background:var(--success);}
+.completed{background:var(--accent);}
 </style>
 </head>
 
 <body>
 
+<!-- Sidebar -->
 <div class="sidebar">
-  <h2>xBlue</h2>
-  <button onclick="show('orders')">Orders</button>
-  <button onclick="show('profile')">Profile</button>
-  <button onclick="logout()">Logout</button>
+  <div class="logo">xBlue</div>
+
+  <div class="nav">
+    <button onclick="showPage('dashboard')">Dashboard</button>
+    <button onclick="showPage('profile')">Profile</button>
+    <button onclick="logout()">Logout</button>
+  </div>
 </div>
 
+<!-- Main -->
 <div class="main">
 
-<!-- Orders -->
-<div id="ordersPage">
+  <div class="topbar">
+    <div>Marketplace Dashboard</div>
+    <div class="user" id="userEmail"></div>
+  </div>
 
-<div class="card">
-  <h3>Create Order</h3>
-  <input id="title" placeholder="Title">
-  <textarea id="desc" placeholder="Description"></textarea>
-  <input id="budget" placeholder="Budget">
-  <button onclick="createOrder()">Submit</button>
-</div>
+  <div class="content">
 
-<div class="card">
-  <h3>Orders</h3>
-  <div id="orders"></div>
-</div>
+    <!-- Dashboard -->
+    <div id="dashboardPage">
 
-<div class="card">
-  <h3>Chat</h3>
-  <div id="chatBox" class="chat"></div>
-  <input id="chatInput" placeholder="Message...">
-  <button onclick="sendMessage()">Send</button>
-</div>
+      <div class="grid">
 
-</div>
+        <div class="card">
+          <h3>Create Order</h3>
+          <input id="title" placeholder="Project title">
+          <textarea id="desc" placeholder="Describe your project..."></textarea>
+          <input id="budget" placeholder="Budget">
+          <button class="btn btn-primary" onclick="createOrder()">Create</button>
+        </div>
 
-<!-- Profile -->
-<div id="profilePage" style="display:none">
+        <div class="card">
+          <h3>Quick Stats</h3>
+          <p id="stats">Loading...</p>
+        </div>
 
-<div class="card">
-  <h3>My Profile</h3>
-  <input id="name" placeholder="Name">
-  <textarea id="bio" placeholder="Bio"></textarea>
-  <input id="skills" placeholder="Skills (comma separated)">
-  <button onclick="saveProfile()">Save</button>
-</div>
+      </div>
 
-<div class="card">
-  <h3>My Rating ⭐</h3>
-  <div id="ratingDisplay"></div>
-</div>
+      <div class="card">
+        <h3>Orders</h3>
+        <div id="orders"></div>
+      </div>
 
-</div>
+    </div>
 
+    <!-- Profile -->
+    <div id="profilePage" style="display:none">
+      <div class="card">
+        <h3>Profile</h3>
+        <input id="name" placeholder="Name">
+        <textarea id="bio" placeholder="About you"></textarea>
+        <input id="skills" placeholder="Skills">
+        <button class="btn btn-primary" onclick="saveProfile()">Save</button>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-  getDatabase, ref, push, onValue, update, get, set
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, get, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAUbpzyuACWNlDIkfe_A47sSQd_We41Gbk",
@@ -183,145 +234,79 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 
 let currentUser;
-let userRole = "buyer";
-let currentChat = null;
 
-// Auth
-onAuthStateChanged(auth, async user => {
-  if (!user) return location.href = "index.html";
-
+onAuthStateChanged(auth, user=>{
+  if(!user) return location.href="index.html";
   currentUser = user;
-
-  const snap = await get(ref(db, 'users/' + user.uid));
-  if (snap.exists()) userRole = snap.val().role;
-
+  userEmail.innerText = user.email;
   loadOrders();
   loadProfile();
-  loadRating();
 });
 
 // Navigation
-window.show = (page) => {
-  ordersPage.style.display = page === 'orders' ? 'block' : 'none';
-  profilePage.style.display = page === 'profile' ? 'block' : 'none';
+window.showPage = (p)=>{
+  dashboardPage.style.display = p==='dashboard'?'block':'none';
+  profilePage.style.display = p==='profile'?'block':'none';
 };
 
 // Orders
-window.createOrder = () => {
-  push(ref(db, "orders"), {
-    title: title.value,
-    desc: desc.value,
-    budget: budget.value,
-    status: "open",
-    buyerId: currentUser.uid,
-    sellerId: null,
-    createdAt: Date.now()
+window.createOrder = ()=>{
+  push(ref(db,"orders"),{
+    title:title.value,
+    desc:desc.value,
+    budget:budget.value,
+    status:"open",
+    userId:currentUser.uid
   });
 };
 
-function loadOrders() {
-  onValue(ref(db, "orders"), snapshot => {
-    const data = snapshot.val();
-    orders.innerHTML = "";
+function loadOrders(){
+  onValue(ref(db,"orders"),snap=>{
+    const data=snap.val();
+    orders.innerHTML="";
+    let count=0;
 
-    if (!data) return;
+    if(!data) return;
 
-    Object.entries(data).reverse().forEach(([id, o]) => {
-
-      let btns = "";
-
-      if (userRole === "seller" && o.status === "open") {
-        btns += `<button onclick="acceptOrder('${id}')">Accept</button>`;
-      }
-
-      if (o.status === "accepted" &&
-        (o.buyerId === currentUser.uid || o.sellerId === currentUser.uid)) {
-        btns += `<button onclick="openChat('${id}')">Chat</button>`;
-      }
-
-      if (o.status === "completed" && o.buyerId === currentUser.uid) {
-        btns += `<div>Rate: ⭐⭐⭐⭐⭐</div>`;
-      }
-
-      orders.innerHTML += `
+    Object.values(data).reverse().forEach(o=>{
+      count++;
+      orders.innerHTML+=`
         <div class="order">
-          <b>${o.title}</b> <span class="badge">${o.status}</span><br>
-          ${o.desc}<br>
-          💰 ${o.budget}<br>
-          ${btns}
+          <div class="order-top">
+            <b>${o.title}</b>
+            <span class="status ${o.status}">${o.status}</span>
+          </div>
+          <div>${o.desc}</div>
+          <div>💰 ${o.budget}</div>
         </div>
       `;
     });
+
+    stats.innerText = count + " orders";
   });
 }
 
-window.acceptOrder = (id) => {
-  update(ref(db, "orders/" + id), {
-    status: "accepted",
-    sellerId: currentUser.uid
-  });
-};
-
-// Chat
-window.openChat = (orderId) => {
-  currentChat = orderId;
-  onValue(ref(db, "messages/" + orderId), snap => {
-    chatBox.innerHTML = "";
-    const data = snap.val();
-    if (!data) return;
-
-    Object.values(data).forEach(m => {
-      chatBox.innerHTML += `<div class="msg"><b>${m.sender}:</b> ${m.text}</div>`;
-    });
-  });
-};
-
-window.sendMessage = () => {
-  push(ref(db, "messages/" + currentChat), {
-    text: chatInput.value,
-    sender: currentUser.email
-  });
-  chatInput.value = "";
-};
-
 // Profile
-window.saveProfile = () => {
-  set(ref(db, "profiles/" + currentUser.uid), {
-    name: name.value,
-    bio: bio.value,
-    skills: skills.value
+window.saveProfile=()=>{
+  set(ref(db,"profiles/"+currentUser.uid),{
+    name:name.value,
+    bio:bio.value,
+    skills:skills.value
   });
 };
 
-async function loadProfile() {
-  const snap = await get(ref(db, "profiles/" + currentUser.uid));
-  if (snap.exists()) {
-    const d = snap.val();
-    name.value = d.name || "";
-    bio.value = d.bio || "";
-    skills.value = d.skills || "";
+async function loadProfile(){
+  const snap = await get(ref(db,"profiles/"+currentUser.uid));
+  if(snap.exists()){
+    const d=snap.val();
+    name.value=d.name||"";
+    bio.value=d.bio||"";
+    skills.value=d.skills||"";
   }
 }
 
-// Rating
-function loadRating() {
-  onValue(ref(db, "ratings/" + currentUser.uid), snap => {
-    const data = snap.val();
-    if (!data) return ratingDisplay.innerText = "No ratings";
-
-    let total = 0, count = 0;
-    Object.values(data).forEach(r => {
-      total += r.value;
-      count++;
-    });
-
-    ratingDisplay.innerText = "⭐ " + (total / count).toFixed(1);
-  });
-}
-
 // Logout
-window.logout = () => signOut(auth);
-
+window.logout=()=>signOut(auth);
 </script>
 
 </body>
