@@ -3,67 +3,164 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard | xBlue Marketplace</title>
+<title>xBlue Marketplace</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
-body {margin:0;font-family:'Plus Jakarta Sans';background:#0f1011;color:white;}
-nav {background:#1e1f22;padding:15px;display:flex;justify-content:space-between;}
-.container {padding:20px;max-width:900px;margin:auto;}
-.card {background:#1e1f22;padding:20px;border-radius:12px;margin-bottom:20px;}
-input, textarea {width:100%;padding:10px;margin-top:10px;border-radius:8px;border:none;background:#2b2d31;color:white;}
-button {margin-top:10px;padding:10px;border:none;border-radius:8px;background:#5865f2;color:white;cursor:pointer;}
-.order {background:#2b2d31;padding:15px;border-radius:10px;margin-top:10px;}
-.chat {background:#111;padding:10px;height:200px;overflow:auto;margin-top:10px;border-radius:8px;}
+:root {
+  --bg:#0f1011;
+  --card:#1e1f22;
+  --accent:#5865f2;
+  --text:#fff;
+  --muted:#949ba4;
+}
+
+body {
+  margin:0;
+  font-family:'Plus Jakarta Sans';
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width:220px;
+  background:#111;
+  height:100vh;
+  padding:20px;
+}
+
+.sidebar h2 {
+  color:var(--accent);
+}
+
+.sidebar button {
+  width:100%;
+  margin-top:10px;
+  background:#2b2d31;
+}
+
+/* Main */
+.main {
+  flex:1;
+  padding:20px;
+}
+
+.card {
+  background:var(--card);
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:20px;
+}
+
+input, textarea {
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+  background:#2b2d31;
+  color:white;
+}
+
+button {
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+}
+
+.order {
+  background:#2b2d31;
+  padding:15px;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.badge {
+  font-size:12px;
+  padding:3px 8px;
+  border-radius:6px;
+  background:#23a559;
+}
+
+/* Chat */
+.chat {
+  height:200px;
+  overflow:auto;
+  background:#111;
+  padding:10px;
+  border-radius:8px;
+}
+
 .msg {margin:5px 0;}
-.admin {border:2px solid #ff4655;}
+
+.star {
+  cursor:pointer;
+  font-size:18px;
+  color:gold;
+}
 </style>
 </head>
 
 <body>
 
-<nav>
-  <div>Dashboard</div>
+<div class="sidebar">
+  <h2>xBlue</h2>
+  <button onclick="show('orders')">Orders</button>
+  <button onclick="show('profile')">Profile</button>
   <button onclick="logout()">Logout</button>
-</nav>
+</div>
 
-<div class="container">
+<div class="main">
 
-  <!-- Create Order -->
-  <div class="card">
-    <h3>Create Order</h3>
-    <input id="title" placeholder="Title">
-    <textarea id="desc" placeholder="Description"></textarea>
-    <input id="budget" placeholder="Budget">
-    <button onclick="createOrder()">Submit</button>
-  </div>
+<!-- Orders -->
+<div id="ordersPage">
 
-  <!-- Orders -->
-  <div class="card">
-    <h3>Orders</h3>
-    <div id="orders"></div>
-  </div>
+<div class="card">
+  <h3>Create Order</h3>
+  <input id="title" placeholder="Title">
+  <textarea id="desc" placeholder="Description"></textarea>
+  <input id="budget" placeholder="Budget">
+  <button onclick="createOrder()">Submit</button>
+</div>
 
-  <!-- Chat -->
-  <div class="card">
-    <h3>Chat</h3>
-    <div id="chatBox" class="chat"></div>
-    <input id="chatInput" placeholder="Message...">
-    <button onclick="sendMessage()">Send</button>
-  </div>
+<div class="card">
+  <h3>Orders</h3>
+  <div id="orders"></div>
+</div>
 
-  <!-- Admin -->
-  <div class="card admin" id="adminPanel" style="display:none;">
-    <h3>Admin Panel 👑</h3>
-    <input id="targetUid" placeholder="User UID">
-    <select id="roleSelect">
-      <option value="buyer">Buyer</option>
-      <option value="seller">Seller</option>
-      <option value="admin">Admin</option>
-    </select>
-    <button onclick="setRole()">Set Role</button>
-  </div>
+<div class="card">
+  <h3>Chat</h3>
+  <div id="chatBox" class="chat"></div>
+  <input id="chatInput" placeholder="Message...">
+  <button onclick="sendMessage()">Send</button>
+</div>
+
+</div>
+
+<!-- Profile -->
+<div id="profilePage" style="display:none">
+
+<div class="card">
+  <h3>My Profile</h3>
+  <input id="name" placeholder="Name">
+  <textarea id="bio" placeholder="Bio"></textarea>
+  <input id="skills" placeholder="Skills (comma separated)">
+  <button onclick="saveProfile()">Save</button>
+</div>
+
+<div class="card">
+  <h3>My Rating ⭐</h3>
+  <div id="ratingDisplay"></div>
+</div>
+
+</div>
 
 </div>
 
@@ -71,12 +168,7 @@ button {margin-top:10px;padding:10px;border:none;border-radius:8px;background:#5
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-  getDatabase,
-  ref,
-  push,
-  onValue,
-  update,
-  get
+  getDatabase, ref, push, onValue, update, get, set
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -94,24 +186,27 @@ let currentUser;
 let userRole = "buyer";
 let currentChat = null;
 
-// 🔐 Auth
+// Auth
 onAuthStateChanged(auth, async user => {
   if (!user) return location.href = "index.html";
 
   currentUser = user;
 
-  // 📥 جلب role
   const snap = await get(ref(db, 'users/' + user.uid));
   if (snap.exists()) userRole = snap.val().role;
 
-  if (user.email === "xbluestudio2009@gmail.com") {
-    document.getElementById("adminPanel").style.display = "block";
-  }
-
   loadOrders();
+  loadProfile();
+  loadRating();
 });
 
-// ➕ Create Order
+// Navigation
+window.show = (page) => {
+  ordersPage.style.display = page === 'orders' ? 'block' : 'none';
+  profilePage.style.display = page === 'profile' ? 'block' : 'none';
+};
+
+// Orders
 window.createOrder = () => {
   push(ref(db, "orders"), {
     title: title.value,
@@ -124,7 +219,6 @@ window.createOrder = () => {
   });
 };
 
-// 📦 Orders
 function loadOrders() {
   onValue(ref(db, "orders"), snapshot => {
     const data = snapshot.val();
@@ -141,16 +235,19 @@ function loadOrders() {
       }
 
       if (o.status === "accepted" &&
-         (o.buyerId === currentUser.uid || o.sellerId === currentUser.uid)) {
+        (o.buyerId === currentUser.uid || o.sellerId === currentUser.uid)) {
         btns += `<button onclick="openChat('${id}')">Chat</button>`;
+      }
+
+      if (o.status === "completed" && o.buyerId === currentUser.uid) {
+        btns += `<div>Rate: ⭐⭐⭐⭐⭐</div>`;
       }
 
       orders.innerHTML += `
         <div class="order">
-          <b>${o.title}</b><br>
+          <b>${o.title}</b> <span class="badge">${o.status}</span><br>
           ${o.desc}<br>
           💰 ${o.budget}<br>
-          📌 ${o.status}<br>
           ${btns}
         </div>
       `;
@@ -158,7 +255,6 @@ function loadOrders() {
   });
 }
 
-// ✅ Accept
 window.acceptOrder = (id) => {
   update(ref(db, "orders/" + id), {
     status: "accepted",
@@ -166,48 +262,64 @@ window.acceptOrder = (id) => {
   });
 };
 
-// 💬 Open Chat
+// Chat
 window.openChat = (orderId) => {
   currentChat = orderId;
-  loadChat(orderId);
-};
-
-// 📩 Load Messages
-function loadChat(orderId) {
   onValue(ref(db, "messages/" + orderId), snap => {
-    const data = snap.val();
     chatBox.innerHTML = "";
-
+    const data = snap.val();
     if (!data) return;
 
     Object.values(data).forEach(m => {
       chatBox.innerHTML += `<div class="msg"><b>${m.sender}:</b> ${m.text}</div>`;
     });
   });
-}
+};
 
-// ✉️ Send
 window.sendMessage = () => {
-  if (!currentChat) return alert("Open chat first");
-
   push(ref(db, "messages/" + currentChat), {
     text: chatInput.value,
-    sender: currentUser.email,
-    createdAt: Date.now()
+    sender: currentUser.email
   });
-
   chatInput.value = "";
 };
 
-// 👑 Admin: Set Role
-window.setRole = () => {
-  update(ref(db, "users/" + targetUid.value), {
-    role: roleSelect.value
+// Profile
+window.saveProfile = () => {
+  set(ref(db, "profiles/" + currentUser.uid), {
+    name: name.value,
+    bio: bio.value,
+    skills: skills.value
   });
-  alert("Role updated ✅");
 };
 
-// 🚪 Logout
+async function loadProfile() {
+  const snap = await get(ref(db, "profiles/" + currentUser.uid));
+  if (snap.exists()) {
+    const d = snap.val();
+    name.value = d.name || "";
+    bio.value = d.bio || "";
+    skills.value = d.skills || "";
+  }
+}
+
+// Rating
+function loadRating() {
+  onValue(ref(db, "ratings/" + currentUser.uid), snap => {
+    const data = snap.val();
+    if (!data) return ratingDisplay.innerText = "No ratings";
+
+    let total = 0, count = 0;
+    Object.values(data).forEach(r => {
+      total += r.value;
+      count++;
+    });
+
+    ratingDisplay.innerText = "⭐ " + (total / count).toFixed(1);
+  });
+}
+
+// Logout
 window.logout = () => signOut(auth);
 
 </script>
