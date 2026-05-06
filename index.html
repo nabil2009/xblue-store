@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>xBlueHook | Maintenance</title>
+<title>xBlueHook | Temporarily Unavailable</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 
@@ -12,14 +12,16 @@
   --bg: #0f1011;
   --card: #1e1f22;
   --accent: #5865f2;
+  --accent2: #23a559;
   --text: #f2f3f5;
   --muted: #949ba4;
 }
 
 * {margin:0;padding:0;box-sizing:border-box;}
+
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background: var(--bg);
+  background: radial-gradient(circle at top, #1a1b1f, #0f1011);
   color: var(--text);
   height:100vh;
   display:flex;
@@ -28,51 +30,109 @@ body {
   overflow:hidden;
 }
 
+/* glow background */
+.bg-glow {
+  position:absolute;
+  width:500px;
+  height:500px;
+  background: var(--accent);
+  filter: blur(150px);
+  opacity:0.15;
+  top:-100px;
+  right:-100px;
+}
+
+/* card */
 .container {
+  position:relative;
   text-align:center;
   background: var(--card);
-  padding:40px;
+  padding:50px 40px;
   border-radius:20px;
-  box-shadow:0 0 40px rgba(0,0,0,0.5);
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
   width:90%;
-  max-width:500px;
+  max-width:520px;
   animation:fadeIn 1s ease;
 }
 
+.logo {
+  font-size:1.8rem;
+  font-weight:800;
+  color: var(--accent);
+  margin-bottom:10px;
+}
+
+.status-badge {
+  display:inline-block;
+  padding:6px 14px;
+  border-radius:50px;
+  background: rgba(255, 70, 85, 0.1);
+  color:#ff4655;
+  font-size:13px;
+  font-weight:600;
+  margin-bottom:20px;
+}
+
 h1 {
-  font-size:2rem;
+  font-size:1.8rem;
   margin-bottom:10px;
 }
 
 p {
   color:var(--muted);
-  margin-bottom:20px;
-}
-
-.status {
-  color:var(--accent);
-  font-weight:600;
   margin-bottom:25px;
+  line-height:1.6;
 }
 
 .loader {
-  border:4px solid rgba(255,255,255,0.1);
-  border-top:4px solid var(--accent);
+  width:45px;
+  height:45px;
   border-radius:50%;
-  width:40px;
-  height:40px;
-  margin:20px auto;
+  border:4px solid rgba(255,255,255,0.08);
+  border-top:4px solid var(--accent);
+  margin:25px auto;
   animation:spin 1s linear infinite;
 }
 
-canvas {
-  background:#111;
-  border-radius:10px;
-  margin-top:20px;
+.actions {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
+.btn {
+  padding:10px 18px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.2s;
+  text-decoration:none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color:white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  background:#4752c4;
+}
+
+.btn-secondary {
+  background:#2b2d31;
+  color:white;
+}
+
+.btn-secondary:hover {
+  background:#3a3c42;
+}
+
+/* animations */
 @keyframes spin {
-  to {transform:rotate(360deg);}
+  to { transform: rotate(360deg); }
 }
 
 @keyframes fadeIn {
@@ -84,106 +144,27 @@ canvas {
 
 <body>
 
+<div class="bg-glow"></div>
+
 <div class="container">
-  <h1>🚧 Under Maintenance</h1>
-  <p>xBlueHook is upgrading to something better.</p>
-  <div class="status">We'll be back soon...</div>
+  <div class="logo">xBlueHook</div>
+
+  <div class="status-badge">● Service Temporarily Disabled</div>
+
+  <h1>We're upgrading the system 🚧</h1>
+
+  <p>
+    The website is currently under maintenance to improve performance and add new features.<br>
+    Please check back later.
+  </p>
 
   <div class="loader"></div>
 
-  <p>Play a quick game while you wait 👇</p>
-
-  <canvas id="game" width="300" height="300"></canvas>
+  <div class="actions">
+    <a href="mailto:xbluestudio2009@gmail.com" class="btn btn-primary">Contact Support</a>
+    <a href="#" class="btn btn-secondary">Discord Server</a>
+  </div>
 </div>
-
-<script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
-
-const grid = 15;
-let count = 0;
-
-let snake = {
-  x: 150,
-  y: 150,
-  dx: grid,
-  dy: 0,
-  cells: [],
-  maxCells: 4
-};
-
-let apple = {
-  x: 90,
-  y: 90
-};
-
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
-
-function loop() {
-  requestAnimationFrame(loop);
-
-  if (++count < 4) return;
-  count = 0;
-
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  snake.x += snake.dx;
-  snake.y += snake.dy;
-
-  if (snake.x < 0) snake.x = canvas.width - grid;
-  else if (snake.x >= canvas.width) snake.x = 0;
-
-  if (snake.y < 0) snake.y = canvas.height - grid;
-  else if (snake.y >= canvas.height) snake.y = 0;
-
-  snake.cells.unshift({x: snake.x, y: snake.y});
-
-  if (snake.cells.length > snake.maxCells) {
-    snake.cells.pop();
-  }
-
-  ctx.fillStyle = "#5865f2";
-  ctx.fillRect(apple.x, apple.y, grid-1, grid-1);
-
-  ctx.fillStyle = "#23a559";
-  snake.cells.forEach(function(cell, index) {
-    ctx.fillRect(cell.x, cell.y, grid-1, grid-1);
-
-    if (cell.x === apple.x && cell.y === apple.y) {
-      snake.maxCells++;
-      apple.x = getRandomInt(0, 20) * grid;
-      apple.y = getRandomInt(0, 20) * grid;
-    }
-
-    for (let i = index + 1; i < snake.cells.length; i++) {
-      if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
-        snake.x = 150;
-        snake.y = 150;
-        snake.cells = [];
-        snake.maxCells = 4;
-        snake.dx = grid;
-        snake.dy = 0;
-      }
-    }
-  });
-}
-
-document.addEventListener("keydown", function(e) {
-  if (e.which === 37 && snake.dx === 0) {
-    snake.dx = -grid; snake.dy = 0;
-  } else if (e.which === 38 && snake.dy === 0) {
-    snake.dy = -grid; snake.dx = 0;
-  } else if (e.which === 39 && snake.dx === 0) {
-    snake.dx = grid; snake.dy = 0;
-  } else if (e.which === 40 && snake.dy === 0) {
-    snake.dy = grid; snake.dx = 0;
-  }
-});
-
-requestAnimationFrame(loop);
-</script>
 
 </body>
 </html>
