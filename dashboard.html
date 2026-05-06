@@ -1,7 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+}
+
+.container {
+  padding: 20px;
+}
+
+.box {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+.logout {
+  background: red;
+}
+
+.order {
+  background: #334155;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="box">
+<h2>Welcome</h2>
+<p>Email: <span id="email"></span></p>
+<p>Role: <span id="role"></span></p>
+<p>Specialty: <span id="specialty"></span></p>
+<button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<div class="box" id="createOrderBox">
+<h3>Create Order</h3>
+<input id="title" placeholder="Title">
+<textarea id="desc" placeholder="Description"></textarea>
+<select id="type">
+  <option value="Developer">Developer</option>
+  <option value="Designer">Designer</option>
+  <option value="Writer">Writer</option>
+</select>
+<button onclick="createOrder()">Send</button>
+</div>
+
+<div class="box">
+<h3>Orders</h3>
+<div id="orders"></div>
+</div>
+
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getDatabase, ref, get, push, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAUbpzyuACWNlDIkfe_A47sSQd_We41Gbk",
@@ -14,32 +104,113 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// تحقق المستخدم + جلب البيانات
+let currentUser;
+let role = "";
+let specialty = "";
+
+// تحميل المستخدم
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    document.getElementById("userEmail").innerText = user.email;
-
-    // 🔥 نجيب الـ role من الداتابيس
-    const snapshot = await get(ref(db, "users/" + user.uid));
-
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      document.getElementById("userRole").innerText = data.role;
-    }
-
-  } else {
-    setTimeout(() => {
-      if (!auth.currentUser) {
-        window.location.href = "index.html";
-      }
-    }, 1500);
+  if (!user) {
+    window.location.href = "index.html";
+    return;
   }
+
+  currentUser = user;
+  document.getElementById("email").innerText = user.email;
+
+  const snap = await get(ref(db, "users/" + user.uid));
+  const data = snap.val();
+
+  role = data.role;
+  specialty = data.specialty || "None";
+
+  document.getElementById("role").innerText = role;
+  document.getElementById("specialty").innerText = specialty;
+
+  // اخفاء الفورم لو بائع
+  if (role === "seller") {
+    document.getElementById("createOrderBox").style.display = "none";
+  }
+
+  loadOrders();
 });
 
-// تسجيل خروج
-window.logout = function() {
-  signOut(auth).then(() => {
-    window.location.href = "index.html";
+// إنشاء طلب
+window.createOrder = async function() {
+  const title = document.getElementById("title").value;
+  const desc = document.getElementById("desc").value;
+  const type = document.getElementById("type").value;
+
+  if (!title || !desc) return alert("Fill all");
+
+  await push(ref(db, "orders"), {
+    title,
+    desc,
+    type,
+    status: "pending",
+    owner: currentUser.uid
+  });
+
+  alert("Order sent");
+  loadOrders();
+}
+
+// تحميل الطلبات
+async function loadOrders() {
+  const container = document.getElementById("orders");
+  container.innerHTML = "";
+
+  const snap = await get(ref(db, "orders"));
+
+  snap.forEach(child => {
+    const o = child.val();
+    const id = child.key;
+
+    // فلترة للبائع
+    if (role === "seller" && o.type !== specialty) return;
+
+    let buttons = "";
+
+    if (role === "seller" && o.status === "pending") {
+      buttons = `
+        <button onclick="accept('${id}')">Accept</button>
+        <button onclick="reject('${id}')">Reject</button>
+      `;
+    }
+
+    container.innerHTML += `
+      <div class="order">
+        <h4>${o.title}</h4>
+        <p>${o.desc}</p>
+        <p>Status: ${o.status}</p>
+        ${buttons}
+      </div>
+    `;
   });
 }
+
+// قبول
+window.accept = async function(id) {
+  await update(ref(db, "orders/" + id), {
+    status: "accepted",
+    seller: currentUser.uid
+  });
+  loadOrders();
+}
+
+// رفض
+window.reject = async function(id) {
+  await update(ref(db, "orders/" + id), {
+    status: "rejected"
+  });
+  loadOrders();
+}
+
+// خروج
+window.logout = function() {
+  signOut(auth);
+}
 </script>
+
+</body>
+</html>
