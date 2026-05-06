@@ -1,57 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .box {
-      background: #1e293b;
-      padding: 30px;
-      border-radius: 15px;
-      text-align: center;
-      width: 300px;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 10px;
-      width: 100%;
-      border: none;
-      border-radius: 8px;
-      background: #ef4444;
-      color: white;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #dc2626;
-    }
-  </style>
-</head>
-
-<body>
-
-<div class="box">
-  <h1>Welcome 🎉</h1>
-  <p id="userEmail">Loading...</p>
-  <button onclick="logout()">Logout</button>
-</div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAUbpzyuACWNlDIkfe_A47sSQd_We41Gbk",
@@ -62,13 +12,22 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getDatabase(app);
 
-// التحقق من المستخدم
-onAuthStateChanged(auth, (user) => {
+// تحقق المستخدم + جلب البيانات
+onAuthStateChanged(auth, async (user) => {
   if (user) {
     document.getElementById("userEmail").innerText = user.email;
+
+    // 🔥 نجيب الـ role من الداتابيس
+    const snapshot = await get(ref(db, "users/" + user.uid));
+
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      document.getElementById("userRole").innerText = data.role;
+    }
+
   } else {
-    // ننتظر شوي قبل التحويل
     setTimeout(() => {
       if (!auth.currentUser) {
         window.location.href = "index.html";
@@ -84,6 +43,3 @@ window.logout = function() {
   });
 }
 </script>
-
-</body>
-</html>
