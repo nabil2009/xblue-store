@@ -1,11 +1,25 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سوق الخدمات - منصة احترافية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>xBlueHook Pro | Ultimate Webhook Studio</title>
+
+    <!-- Meta & SEO -->
+    <meta name="description" content="xBlueHook Pro - The ultimate Discord Webhook Manager with live preview, multi-embed support, Markdown styling, and professional UI. Create stunning embeds in seconds.">
+    <meta name="keywords" content="discord webhook, embed builder, webhook manager, xbluehook, discord tools, embed designer">
+    <meta name="author" content="xBlueHook Studio">
+    <meta property="og:title" content="xBlueHook Pro | Webhook Manager 🚀">
+    <meta property="og:description" content="Next-gen Discord Webhook editor. Real-time preview, markdown support, multi-embeds, and smooth UX.">
+    <meta property="og:image" content="https://i.postimg.cc/tJ7mX8YF/icone.png">
+    <meta property="og:url" content="https://xbluehook.app">
+    <meta name="theme-color" content="#5865f2">
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/tJ7mX8YF/icone.png">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         * {
             margin: 0;
@@ -14,767 +28,790 @@
         }
 
         body {
-            font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background: #0a0c0f;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #eef2ff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .navbar {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
+        /* Glassmorphic navigation */
+        .glass-nav {
+            background: rgba(30, 32, 38, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(88, 101, 242, 0.25);
+            padding: 0 28px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #5865f2, #4752c4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 12px rgba(88, 101, 242, 0.25);
+        }
+
+        .logo-icon i {
+            font-size: 22px;
+            color: white;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.65rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff, #b9c2ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge-beta {
+            background: #2b2d31;
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #a0a3b0;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .lang-selector {
+            background: #1e1f24;
+            border: 1px solid #313338;
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            outline: none;
+            font-family: inherit;
+        }
+
+        /* MAIN GRID LAYOUT */
+        .dashboard {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            gap: 0;
+        }
+
+        /* EDITOR PANEL - refined */
+        .editor-panel {
+            width: 520px;
+            background: #111214;
+            border-right: 1px solid #202225;
+            overflow-y: auto;
+            padding: 24px 22px;
+            scrollbar-width: thin;
+        }
+
+        .section-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8e92a3;
+            margin: 24px 0 14px 0;
+        }
+
+        .section-badge i {
+            font-size: 13px;
+            color: #5865f2;
+        }
+
+        .card-input {
+            background: #1a1c22;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #292c33;
+            transition: all 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .card-input:focus-within {
+            border-color: #5865f2;
+            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.2);
+        }
+
+        input, textarea {
             width: 100%;
-            top: 0;
-            z-index: 1000;
+            background: #0f1116;
+            border: 1px solid #2a2e36;
+            border-radius: 14px;
+            padding: 12px 16px;
+            color: #f2f3f5;
+            font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            outline: none;
         }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
+        input:focus, textarea:focus {
+            border-color: #5865f2;
+            box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .embed-card-editor {
+            background: #15171e;
+            border-radius: 24px;
+            padding: 18px;
+            margin-bottom: 24px;
+            border-left: 4px solid #5865f2;
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .embed-header-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #b5bac1;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .delete-embed {
+            background: #2a1e22;
+            color: #ff6b7c;
+            border: none;
+            border-radius: 40px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
         }
 
-        .logo i {
-            margin-left: 10px;
+        .delete-embed:hover {
+            background: #ff4655;
+            color: white;
+        }
+
+        .add-embed-btn {
+            background: rgba(88, 101, 242, 0.12);
+            border: 2px dashed #3b3f4a;
+            border-radius: 30px;
+            padding: 16px;
+            width: 100%;
+            font-weight: 700;
+            color: #b9c2ff;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .add-embed-btn:hover {
+            background: #1f2230;
+            border-color: #5865f2;
+            color: white;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* PREVIEW PANEL - Discord-like */
+        .preview-panel {
+            flex: 1;
+            background: #1e1f24;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+
+        .message-wrapper {
+            max-width: 760px;
+            width: 100%;
+            background: transparent;
+        }
+
+        .discord-message {
+            display: flex;
+            gap: 16px;
+            padding: 12px 18px;
+            border-radius: 12px;
+            transition: 0.1s;
+        }
+
+        .avatar-place {
+            flex-shrink: 0;
+        }
+
+        .avatar-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            background-color: #2b2d31;
+        }
+
+        .message-content-area {
+            flex: 1;
+        }
+
+        .msg-header {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .msg-author {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #ffffff;
+        }
+
+        .bot-tag {
+            background: #5865f2;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .timestamp {
+            font-size: 0.7rem;
+            color: #9aa2b0;
+        }
+
+        .msg-text {
+            font-size: 0.95rem;
+            line-height: 1.45;
+            color: #eef2ff;
+            white-space: pre-wrap;
+            margin-bottom: 10px;
+        }
+
+        /* Embeds rendering */
+        .preview-embed {
+            background: #2b2d31;
+            border-radius: 8px;
+            border-left: 4px solid;
+            margin-top: 12px;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .embed-inner {
+            display: flex;
+            padding: 12px 14px;
+            gap: 16px;
+        }
+
+        .embed-text {
+            flex: 1;
+        }
+
+        .embed-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .embed-author img {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+        }
+
+        .embed-title {
+            color: #00a8fc;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .embed-desc {
+            font-size: 0.85rem;
+            color: #dbdee1;
+            line-height: 1.4;
+        }
+
+        .embed-thumb {
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .embed-image {
+            margin: 0 14px 14px 14px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .embed-image img {
+            width: 100%;
+            max-height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .embed-footer {
+            padding: 8px 14px 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            color: #9aa2b0;
+            border-top: 1px solid #383c44;
+            margin-top: 6px;
+        }
+
+        /* Action bar */
+        .action-bar {
+            background: #141518;
+            backdrop-filter: blur(12px);
+            border-top: 1px solid #2a2c33;
+            padding: 16px 30px;
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            z-index: 99;
         }
 
         .btn {
-            padding: 0.5rem 1.5rem;
-            border: none;
-            border-radius: 8px;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            transition: 0.2s;
             cursor: pointer;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s;
+            border: none;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(105deg, #5865f2, #6c7af5);
             color: white;
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+            filter: brightness(1.05);
         }
 
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #667eea;
-            color: #667eea;
+        .btn-secondary {
+            background: #272a32;
+            color: #dbdee1;
         }
 
-        .btn-outline:hover {
-            background: #667eea;
-            color: white;
+        .btn-secondary:hover {
+            background: #353a44;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 100px auto 2rem;
-            padding: 2rem;
-        }
-
-        .hero {
-            text-align: center;
-            color: white;
-            padding: 4rem 2rem;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
+        #toast-notify {
             position: fixed;
-            z-index: 1100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-        }
-
-        .modal-content {
-            background: white;
-            margin: 10% auto;
-            padding: 2rem;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 450px;
-            position: relative;
-        }
-
-        .close {
-            position: absolute;
-            right: 1rem;
-            top: 1rem;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #999;
-        }
-
-        .modal-content h2 {
-            margin-bottom: 1.5rem;
-            color: #667eea;
-            text-align: center;
-        }
-
-        .modal-content input,
-        .modal-content select,
-        .modal-content textarea {
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 1rem;
-        }
-
-        .modal-content button {
-            width: 100%;
-            margin-top: 0.5rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: #333;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e1f28e6;
+            backdrop-filter: blur(16px);
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
             color: white;
-            font-weight: bold;
-        }
-
-        .dashboard {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            min-height: 400px;
-        }
-
-        .orders-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .order-card {
-            background: #f9fafb;
-            border-radius: 15px;
-            padding: 1.5rem;
-            border: 1px solid #e5e7eb;
-        }
-
-        .order-card h4 {
-            margin-bottom: 0.5rem;
-            color: #333;
-        }
-
-        .order-price {
-            color: #10b981;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin: 0.5rem 0;
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            position: fixed;
-            top: 80px;
-            right: 20px;
             z-index: 9999;
-            animation: slideIn 0.3s;
+            border-left: 4px solid #23a559;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
 
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
-
-        .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .hidden {
+        .loader-small {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
             display: none;
         }
 
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            border-bottom: 2px solid #e5e7eb;
-            margin-bottom: 1.5rem;
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .tab {
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            color: #6b7280;
-            border: none;
-            background: none;
-            font-family: 'Tajawal', sans-serif;
-        }
-
-        .tab.active {
-            color: #667eea;
-            border-bottom: 2px solid #667eea;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .orders-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0d10; }
+        ::-webkit-scrollbar-thumb { background: #2e333d; border-radius: 8px; }
     </style>
 </head>
 <body>
 
-<nav class="navbar">
-    <div class="nav-container">
-        <div class="logo">
-            <i class="fas fa-store"></i>
-            <span>سوق الخدمات</span>
-        </div>
-        <div id="authButtons">
-            <button class="btn btn-outline" onclick="showLogin()">دخول</button>
-            <button class="btn btn-primary" onclick="showRegister()">تسجيل</button>
-        </div>
-        <div id="userInfo" class="user-info hidden">
-            <div class="user-avatar" id="userAvatar">م</div>
-            <span id="userName"></span>
-            <button class="btn btn-outline" onclick="logout()" style="padding: 0.25rem 1rem;">خروج</button>
-        </div>
+<nav class="glass-nav">
+    <div class="logo-area">
+        <div class="logo-icon"><i class="fa-brands fa-discord"></i></div>
+        <div class="logo-text">xBlueHook</div>
+        <div class="badge-beta">PRO BETA</div>
     </div>
+    <select id="langSelect" class="lang-selector">
+        <option value="en">🌐 English</option>
+        <option value="ar">🇸🇦 العربية</option>
+    </select>
 </nav>
 
-<div class="container">
-    <div id="homePage">
-        <div class="hero">
-            <h1>مرحباً بك في سوق الخدمات</h1>
-            <p>منصة تربط بين العملاء والبائعين المحترفين</p>
-            <button class="btn btn-primary" onclick="showNewOrder()" style="font-size: 1.2rem; padding: 0.75rem 2rem;">
-                <i class="fas fa-plus"></i> أطلب خدمة الآن
-            </button>
+<div class="dashboard">
+    <div class="editor-panel" id="editorPanel">
+        <div class="section-badge"><i class="fa-solid fa-plug"></i> <span id="lblWebhook">WEBHOOK CONFIG</span></div>
+        <div class="card-input">
+            <input type="text" id="webhookUrl" placeholder="https://discord.com/api/webhooks/..." autocomplete="off">
+            <div class="grid-2col" style="margin-top: 12px;">
+                <input type="text" id="botName" placeholder="Bot name" value="xBlueHook Pro">
+                <input type="text" id="botAvatar" placeholder="Avatar URL" value="https://cdn-icons-png.flaticon.com/512/10085/10085077.png">
+            </div>
         </div>
-        <div class="dashboard">
-            <h3>📋 أحدث الطلبات</h3>
-            <div id="ordersList" class="orders-grid">
-                <div style="text-align: center;">جاري التحميل...</div>
+
+        <div class="section-badge"><i class="fa-regular fa-message"></i> <span id="lblMessage">MESSAGE CONTENT</span></div>
+        <div class="card-input">
+            <textarea id="messageText" rows="2" placeholder="Write your message... supports **bold**, *italic*, [links](url) and new lines"></textarea>
+        </div>
+
+        <div id="embedsDynamicContainer"></div>
+
+        <button id="addEmbedBtn" class="add-embed-btn"><i class="fa-solid fa-layer-group"></i> <span id="lblAddEmbed">ADD EMBED</span></button>
+    </div>
+
+    <div class="preview-panel">
+        <div class="message-wrapper">
+            <div class="discord-message">
+                <div class="avatar-place">
+                    <div class="avatar-img" id="previewAvatar" style="background-image: url('https://cdn-icons-png.flaticon.com/512/10085/10085077.png');"></div>
+                </div>
+                <div class="message-content-area">
+                    <div class="msg-header">
+                        <span class="msg-author" id="previewUsername">xBlueHook Pro</span>
+                        <span class="bot-tag">BOT</span>
+                        <span class="timestamp" id="timestampPreview">Just now</span>
+                    </div>
+                    <div class="msg-text" id="previewMessageText"></div>
+                    <div id="previewEmbedsList"></div>
+                </div>
             </div>
         </div>
     </div>
-
-    <div id="dashboardPage" class="hidden">
-        <div class="dashboard">
-            <h2 id="dashboardTitle">لوحة التحكم</h2>
-            <div id="dashboardContent"></div>
-        </div>
-    </div>
 </div>
 
-<!-- Login Modal -->
-<div id="loginModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('loginModal')">&times;</span>
-        <h2>تسجيل الدخول</h2>
-        <form id="loginForm">
-            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
-            <input type="password" id="loginPassword" placeholder="كلمة المرور" required>
-            <button type="submit" class="btn btn-primary">دخول</button>
-        </form>
-    </div>
+<div class="action-bar">
+    <button class="btn btn-secondary" id="copyJsonBtn"><i class="fa-regular fa-copy"></i> <span id="lblCopy">Copy JSON</span></button>
+    <button class="btn btn-primary" id="sendWebhookBtn"><i class="fa-regular fa-paper-plane"></i> <span id="lblSend">Send to Discord</span><div class="loader-small" id="sendLoader"></div></button>
 </div>
 
-<!-- Register Modal -->
-<div id="registerModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('registerModal')">&times;</span>
-        <h2>إنشاء حساب جديد</h2>
-        <form id="registerForm">
-            <input type="text" id="regName" placeholder="الاسم الكامل" required>
-            <input type="email" id="regEmail" placeholder="البريد الإلكتروني" required>
-            <input type="password" id="regPassword" placeholder="كلمة المرور" required>
-            <select id="regRole">
-                <option value="buyer">مشتري (أريد شراء خدمات)</option>
-                <option value="seller">بائع (أريد بيع خدمات)</option>
-            </select>
-            <div id="sellerFields" class="hidden">
-                <select id="regSpecialization">
-                    <option value="developer">مبرمج</option>
-                    <option value="designer">مصمم</option>
-                    <option value="writer">كاتب</option>
-                    <option value="marketing">مسوق</option>
-                </select>
-                <textarea id="regBio" placeholder="نبذة عنك ومهاراتك..."></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">تسجيل</button>
-        </form>
-    </div>
-</div>
+<div id="toast-notify"><i class="fa-solid fa-circle-check"></i> <span id="toastMsg"></span></div>
 
-<!-- New Order Modal -->
-<div id="orderModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('orderModal')">&times;</span>
-        <h2>طلب خدمة جديدة</h2>
-        <form id="newOrderForm">
-            <input type="text" id="orderTitle" placeholder="عنوان الطلب" required>
-            <textarea id="orderDesc" placeholder="وصف تفصيلي..." required></textarea>
-            <input type="number" id="orderBudget" placeholder="الميزانية (ريال)" required>
-            <select id="orderType" required>
-                <option value="">اختر التخصص</option>
-                <option value="developer">مبرمج</option>
-                <option value="designer">مصمم</option>
-                <option value="writer">كاتب</option>
-                <option value="marketing">مسوق</option>
-            </select>
-            <button type="submit" class="btn btn-primary">إرسال الطلب</button>
-        </form>
-    </div>
-</div>
-
-<script type="importmap">
-    {
-        "imports": {
-            "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
-            "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+<script>
+    // ---------- i18n ----------
+    const translations = {
+        en: {
+            webhook: "WEBHOOK CONFIG", message: "MESSAGE CONTENT", addEmbed: "ADD EMBED", copy: "Copy JSON", send: "Send to Discord",
+            success: "Webhook delivered successfully!", error: "Failed to send. Check URL.", copied: "JSON copied to clipboard!"
+        },
+        ar: {
+            webhook: "إعدادات ويب هوك", message: "نص الرسالة", addEmbed: "إضافة إمبد", copy: "نسخ JSON", send: "إرسال إلى ديسكورد",
+            success: "تم الإرسال بنجاح ✅", error: "فشل الإرسال ❌ تأكد من الرابط", copied: "تم نسخ البيانات 📋"
         }
-    }
-</script>
-
-<script type="module">
-    import { initializeApp } from "firebase/app";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "firebase/auth";
-    import { getFirestore, doc, setDoc, getDoc, getDocs, collection, addDoc, query, orderBy, serverTimestamp, deleteDoc, updateDoc, where } from "firebase/firestore";
-
-    // Firebase Configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyAUbpzyuACWNlDIkfe_A47sSQd_We41Gbk",
-        authDomain: "my-marketplace-c2cd7.firebaseapp.com",
-        databaseURL: "https://my-marketplace-c2cd7-default-rtdb.firebaseio.com",
-        projectId: "my-marketplace-c2cd7",
-        storageBucket: "my-marketplace-c2cd7.firebasestorage.app",
-        messagingSenderId: "649905836994",
-        appId: "1:649905836994:web:3e3d83a093c5216838fc5b",
-        measurementId: "G-WLSWQFPM8M"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    let currentLang = "en";
+    let embedsArray = [
+        {
+            title: "✨ Welcome to xBlueHook Pro",
+            description: "The most advanced webhook studio.\n\n**Features:**\n• Real-time preview\n• Markdown support\n• Multi-embed builder\n• [Support Server](https://discord.gg/invite)",
+            color: "#5865f2",
+            author: "xBlueHook Team",
+            authorIcon: "https://i.postimg.cc/tJ7mX8YF/icone.png",
+            footer: "Pro edition • seamless experience",
+            footerIcon: "https://i.postimg.cc/tJ7mX8YF/icone.png",
+            image: "",
+            thumbnail: "https://i.postimg.cc/tJ7mX8YF/icone.png"
+        }
+    ];
 
-    let currentUser = null;
-    let currentUserRole = null;
+    // DOM elements
+    const webhookUrlInput = document.getElementById('webhookUrl');
+    const botNameInput = document.getElementById('botName');
+    const botAvatarInput = document.getElementById('botAvatar');
+    const messageTextarea = document.getElementById('messageText');
+    const embedsContainer = document.getElementById('embedsDynamicContainer');
+    const previewAvatarDiv = document.getElementById('previewAvatar');
+    const previewUsernameSpan = document.getElementById('previewUsername');
+    const previewMessageDiv = document.getElementById('previewMessageText');
+    const previewEmbedsDiv = document.getElementById('previewEmbedsList');
 
-    // Helper Functions
-    function showMessage(msg, type = 'success') {
-        const div = document.createElement('div');
-        div.className = `alert alert-${type}`;
-        div.innerHTML = msg;
-        document.body.appendChild(div);
-        setTimeout(() => div.remove(), 3000);
+    // Helper to update timestamp preview
+    function updateTimestamp() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' });
+        document.getElementById('timestampPreview').innerText = `Today at ${timeStr}`;
     }
 
-    window.showLogin = () => {
-        document.getElementById('loginModal').style.display = 'block';
-    };
-
-    window.showRegister = () => {
-        document.getElementById('registerModal').style.display = 'block';
-    };
-
-    window.closeModal = (id) => {
-        document.getElementById(id).style.display = 'none';
-    };
-
-    window.showNewOrder = () => {
-        if (!currentUser) {
-            showMessage('يرجى تسجيل الدخول أولاً', 'error');
-            showLogin();
-            return;
-        }
-        if (currentUserRole !== 'buyer') {
-            showMessage('فقط المشترين يمكنهم إنشاء طلبات', 'error');
-            return;
-        }
-        document.getElementById('orderModal').style.display = 'block';
-    };
-
-    window.logout = async () => {
-        await signOut(auth);
-        showMessage('تم تسجيل الخروج');
-        window.location.reload();
-    };
-
-    // Handle Role Selection in Register
-    document.getElementById('regRole')?.addEventListener('change', (e) => {
-        const sellerFields = document.getElementById('sellerFields');
-        if (e.target.value === 'seller') {
-            sellerFields.classList.remove('hidden');
-        } else {
-            sellerFields.classList.add('hidden');
-        }
-    });
-
-    // Register Form
-    document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = document.getElementById('regName').value;
-        const email = document.getElementById('regEmail').value;
-        const password = document.getElementById('regPassword').value;
-        const role = document.getElementById('regRole').value;
-
-        try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-            
-            await updateProfile(user, { displayName: name });
-
-            const userData = {
-                uid: user.uid,
-                name: name,
-                email: email,
-                role: role,
-                createdAt: new Date().toISOString()
-            };
-
-            if (role === 'seller') {
-                userData.sellerProfile = {
-                    specialization: document.getElementById('regSpecialization').value,
-                    bio: document.getElementById('regBio').value || 'مصمم محترف',
-                    rating: 0
-                };
-            }
-
-            await setDoc(doc(db, 'users', user.uid), userData);
-            
-            showMessage('✅ تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول');
-            closeModal('registerModal');
-            
-            // Reset form
-            document.getElementById('registerForm').reset();
-            document.getElementById('sellerFields').classList.add('hidden');
-            
-        } catch (error) {
-            showMessage('❌ خطأ: ' + error.message, 'error');
-        }
-    });
-
-    // Login Form
-    document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            showMessage('✅ تم تسجيل الدخول بنجاح');
-            closeModal('loginModal');
-            document.getElementById('loginForm').reset();
-            window.location.reload();
-        } catch (error) {
-            showMessage('❌ خطأ في الدخول: ' + error.message, 'error');
-        }
-    });
-
-    // New Order Form
-    document.getElementById('newOrderForm')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const title = document.getElementById('orderTitle').value;
-        const desc = document.getElementById('orderDesc').value;
-        const budget = parseInt(document.getElementById('orderBudget').value);
-        const type = document.getElementById('orderType').value;
-
-        try {
-            await addDoc(collection(db, 'orders'), {
-                title: title,
-                description: desc,
-                budget: budget,
-                requiredSkill: type,
-                buyerId: currentUser.uid,
-                buyerName: currentUser.displayName,
-                status: 'pending',
-                createdAt: serverTimestamp()
-            });
-            showMessage('✅ تم إنشاء الطلب بنجاح!');
-            closeModal('orderModal');
-            document.getElementById('newOrderForm').reset();
-            loadOrders();
-            if (currentUserRole === 'buyer') {
-                loadDashboard();
-            }
-        } catch (error) {
-            showMessage('❌ خطأ: ' + error.message, 'error');
-        }
-    });
-
-    // Accept Order
-    window.acceptOrder = async (orderId) => {
-        if (!currentUser || currentUserRole !== 'seller') {
-            showMessage('فقط البائعين يمكنهم قبول الطلبات', 'error');
-            return;
-        }
-
-        try {
-            await updateDoc(doc(db, 'orders', orderId), {
-                status: 'accepted',
-                sellerId: currentUser.uid,
-                sellerName: currentUser.displayName,
-                acceptedAt: serverTimestamp()
-            });
-            showMessage('✅ تم قبول الطلب بنجاح!');
-            loadOrders();
-            loadDashboard();
-        } catch (error) {
-            showMessage('❌ خطأ: ' + error.message, 'error');
-        }
-    };
-
-    // Complete Order
-    window.completeOrder = async (orderId) => {
-        try {
-            await updateDoc(doc(db, 'orders', orderId), {
-                status: 'completed'
-            });
-            showMessage('✅ تم إكمال الطلب!');
-            loadOrders();
-            loadDashboard();
-        } catch (error) {
-            showMessage('❌ خطأ: ' + error.message, 'error');
-        }
-    };
-
-    // Load Orders for Home Page
-    async function loadOrders() {
-        const container = document.getElementById('ordersList');
-        try {
-            const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
-            const snapshot = await getDocs(q);
-            
-            if (snapshot.empty) {
-                container.innerHTML = '<div style="text-align: center; grid-column: 1/-1;">لا توجد طلبات حالياً</div>';
-                return;
-            }
-
-            let ordersHtml = '';
-            snapshot.forEach(doc => {
-                const order = doc.data();
-                const isPending = order.status === 'pending';
-                const isSeller = currentUserRole === 'seller';
-                const isMyOrder = currentUser && order.buyerId === currentUser.uid;
-                
-                ordersHtml += `
-                    <div class="order-card">
-                        <h4>${order.title || 'طلب جديد'}</h4>
-                        <p style="color: #666; margin: 0.5rem 0;">${order.description?.substring(0, 100) || 'لا يوجد وصف'}</p>
-                        <div class="order-price">💰 ${order.budget || 0} ريال</div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
-                            <small>👤 ${order.buyerName || 'عميل'}</small>
-                            <small>📌 ${order.status === 'pending' ? 'قيد الانتظار' : order.status === 'accepted' ? 'تم القبول' : 'مكتمل'}</small>
-                        </div>
-                        ${isPending && isSeller && !isMyOrder ? 
-                            `<button class="btn btn-primary" style="margin-top: 1rem; width: 100%;" onclick="acceptOrder('${doc.id}')">قبول الطلب</button>` : ''}
-                        ${order.status === 'accepted' && order.sellerId === currentUser?.uid ? 
-                            `<button class="btn btn-success" style="margin-top: 1rem; width: 100%;" onclick="completeOrder('${doc.id}')">تسليم الطلب</button>` : ''}
-                    </div>
-                `;
-            });
-            container.innerHTML = ordersHtml;
-        } catch (error) {
-            console.error('Error:', error);
-            container.innerHTML = '<div style="text-align: center;">حدث خطأ في تحميل الطلبات</div>';
-        }
+    // Markdown + link parser for preview (supports bold, italic, links, newlines)
+    function formatMarkdown(text) {
+        if (!text) return "";
+        let formatted = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color:#00a8fc; text-decoration:none;">$1</a>');
+        formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        formatted = formatted.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        formatted = formatted.replace(/\n/g, '<br>');
+        return formatted;
     }
 
-    // Load Dashboard
-    async function loadDashboard() {
-        const container = document.getElementById('dashboardContent');
-        if (!currentUser) return;
-
-        if (currentUserRole === 'buyer') {
-            const q = query(collection(db, 'orders'), where('buyerId', '==', currentUser.uid), orderBy('createdAt', 'desc'));
-            const snapshot = await getDocs(q);
+    function updatePreview() {
+        // update basic message info
+        const username = botNameInput.value.trim() || "xBlueHook Pro";
+        const avatar = botAvatarInput.value.trim() || "https://cdn-icons-png.flaticon.com/512/10085/10085077.png";
+        previewUsernameSpan.innerText = username;
+        previewAvatarDiv.style.backgroundImage = `url('${avatar}')`;
+        const rawMsg = messageTextarea.value;
+        previewMessageDiv.innerHTML = formatMarkdown(rawMsg);
+        
+        // render embeds
+        previewEmbedsDiv.innerHTML = '';
+        embedsArray.forEach(emb => {
+            const embedDiv = document.createElement('div');
+            embedDiv.className = 'preview-embed';
+            embedDiv.style.borderLeftColor = emb.color || '#5865f2';
             
-            if (snapshot.empty) {
-                container.innerHTML = '<div style="text-align: center;">لا توجد طلبات. <button class="btn btn-primary" onclick="showNewOrder()">أنشئ طلباً الآن</button></div>';
-                return;
+            let innerHtml = `<div class="embed-inner"><div class="embed-text">`;
+            if (emb.author && emb.author.trim() !== "") {
+                innerHtml += `<div class="embed-author">${emb.authorIcon ? `<img src="${emb.authorIcon}" onerror="this.style.display='none'">` : ''}<span>${escapeHtml(emb.author)}</span></div>`;
             }
-            
-            let ordersHtml = '<div class="orders-grid">';
-            snapshot.forEach(doc => {
-                const order = doc.data();
-                ordersHtml += `
-                    <div class="order-card">
-                        <h4>${order.title}</h4>
-                        <p>${order.description}</p>
-                        <div class="order-price">💰 ${order.budget} ريال</div>
-                        <div style="margin-top: 0.5rem;">
-                            <small>📌 الحالة: ${order.status === 'pending' ? 'قيد الانتظار' : order.status === 'accepted' ? `تم القبول بواسطة ${order.sellerName || 'بائع'}` : 'مكتمل'}</small>
-                        </div>
-                    </div>
-                `;
-            });
-            ordersHtml += '</div>';
-            container.innerHTML = ordersHtml;
-            
-        } else if (currentUserRole === 'seller') {
-            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-            const userData = userDoc.data();
-            const specialization = userData?.sellerProfile?.specialization || 'developer';
-            
-            const pendingQ = query(collection(db, 'orders'), where('status', '==', 'pending'), where('requiredSkill', '==', specialization));
-            const myQ = query(collection(db, 'orders'), where('sellerId', '==', currentUser.uid));
-            
-            const [pendingSnapshot, mySnapshot] = await Promise.all([getDocs(pendingQ), getDocs(myQ)]);
-            
-            container.innerHTML = `
-                <div class="tabs">
-                    <button class="tab active" onclick="showTab('available')">📋 الطلبات المتاحة</button>
-                    <button class="tab" onclick="showTab('my')">✅ طلباتي</button>
+            if (emb.title && emb.title.trim() !== "") {
+                innerHtml += `<div class="embed-title">${escapeHtml(emb.title)}</div>`;
+            }
+            if (emb.description && emb.description.trim() !== "") {
+                let descFormatted = formatMarkdown(emb.description);
+                innerHtml += `<div class="embed-desc">${descFormatted}</div>`;
+            }
+            innerHtml += `</div>`;
+            if (emb.thumbnail && emb.thumbnail.trim() !== "") {
+                innerHtml += `<img class="embed-thumb" src="${emb.thumbnail}" onerror="this.style.display='none'">`;
+            }
+            innerHtml += `</div>`;
+            if (emb.image && emb.image.trim() !== "") {
+                innerHtml += `<div class="embed-image"><img src="${emb.image}" onerror="this.style.display='none'"></div>`;
+            }
+            if (emb.footer && emb.footer.trim() !== "") {
+                innerHtml += `<div class="embed-footer">${emb.footerIcon ? `<img src="${emb.footerIcon}" width="18" height="18" style="border-radius:50%;">` : ''}<span>${escapeHtml(emb.footer)}</span></div>`;
+            }
+            embedDiv.innerHTML = innerHtml;
+            previewEmbedsDiv.appendChild(embedDiv);
+        });
+        updateTimestamp();
+    }
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+    // Render dynamic embed editors
+    function renderEmbedEditors() {
+        embedsContainer.innerHTML = '';
+        embedsArray.forEach((embed, idx) => {
+            const editorDiv = document.createElement('div');
+            editorDiv.className = 'embed-card-editor';
+            editorDiv.style.borderLeftColor = embed.color || '#5865f2';
+            editorDiv.innerHTML = `
+                <div class="embed-header-actions">
+                    <span><i class="fa-regular fa-rectangle-ad"></i> Embed #${idx+1}</span>
+                    <button class="delete-embed" data-index="${idx}"><i class="fa-regular fa-trash-can"></i> Remove</button>
                 </div>
-                <div id="availableTab">
-                    <div class="orders-grid">
-                        ${pendingSnapshot.empty ? '<div style="text-align: center; grid-column: 1/-1;">لا توجد طلبات متاحة حالياً</div>' : 
-                            Array.from(pendingSnapshot.docs).map(doc => {
-                                const order = doc.data();
-                                return `
-                                    <div class="order-card">
-                                        <h4>${order.title}</h4>
-                                        <p>${order.description}</p>
-                                        <div class="order-price">💰 ${order.budget} ريال</div>
-                                        <small>👤 ${order.buyerName}</small>
-                                        <button class="btn btn-primary" style="margin-top: 1rem; width: 100%;" onclick="acceptOrder('${doc.id}')">قبول الطلب</button>
-                                    </div>
-                                `;
-                            }).join('')
-                        }
-                    </div>
+                <input type="text" placeholder="Title" value="${escapeAttr(embed.title)}" data-field="title" data-index="${idx}" class="eb-title">
+                <textarea placeholder="Description (supports markdown, links, bold...)" data-field="desc" data-index="${idx}" class="eb-desc" rows="2">${escapeAttr(embed.description)}</textarea>
+                <div class="grid-2col">
+                    <input type="text" placeholder="Author name" value="${escapeAttr(embed.author)}" data-field="author" data-index="${idx}">
+                    <input type="text" placeholder="Author icon URL" value="${escapeAttr(embed.authorIcon)}" data-field="authorIcon" data-index="${idx}">
+                    <input type="text" placeholder="Thumbnail URL" value="${escapeAttr(embed.thumbnail)}" data-field="thumbnail" data-index="${idx}">
+                    <input type="text" placeholder="Image URL" value="${escapeAttr(embed.image)}" data-field="image" data-index="${idx}">
+                    <input type="text" placeholder="Footer text" value="${escapeAttr(embed.footer)}" data-field="footer" data-index="${idx}">
+                    <input type="text" placeholder="Footer icon URL" value="${escapeAttr(embed.footerIcon)}" data-field="footerIcon" data-index="${idx}">
                 </div>
-                <div id="myTab" class="hidden">
-                    <div class="orders-grid">
-                        ${mySnapshot.empty ? '<div style="text-align: center; grid-column: 1/-1;">لا توجد طلبات مقبولة</div>' :
-                            Array.from(mySnapshot.docs).map(doc => {
-                                const order = doc.data();
-                                return `
-                                    <div class="order-card">
-                                        <h4>${order.title}</h4>
-                                        <p>${order.description}</p>
-                                        <div class="order-price">💰 ${order.budget} ريال</div>
-                                        <small>👤 العميل: ${order.buyerName}</small>
-                                        ${order.status === 'accepted' ? 
-                                            `<button class="btn btn-success" style="margin-top: 1rem; width: 100%;" onclick="completeOrder('${doc.id}')">تسليم الطلب</button>` : 
-                                            `<div style="margin-top: 1rem; color: #10b981;">✓ تم التسليم</div>`
-                                        }
-                                    </div>
-                                `;
-                            }).join('')
-                        }
-                    </div>
-                </div>
+                <input type="color" value="${embed.color || '#5865f2'}" data-field="color" data-index="${idx}" class="eb-color" style="margin-top:12px; width:100%; height:38px; background:#111; border:none;">
             `;
+            embedsContainer.appendChild(editorDiv);
+        });
+
+        // attach event listeners
+        document.querySelectorAll('[data-field]').forEach(el => {
+            el.addEventListener('input', (e) => {
+                const idx = parseInt(el.dataset.index);
+                const field = el.dataset.field;
+                let value = el.value;
+                if (field === 'color') embedsArray[idx][field] = value;
+                else if (field === 'title') embedsArray[idx].title = value;
+                else if (field === 'desc') embedsArray[idx].description = value;
+                else if (field === 'author') embedsArray[idx].author = value;
+                else if (field === 'authorIcon') embedsArray[idx].authorIcon = value;
+                else if (field === 'thumbnail') embedsArray[idx].thumbnail = value;
+                else if (field === 'image') embedsArray[idx].image = value;
+                else if (field === 'footer') embedsArray[idx].footer = value;
+                else if (field === 'footerIcon') embedsArray[idx].footerIcon = value;
+                updatePreview();
+                renderEmbedEditors(); // re-render to keep sync but avoid heavy loops? we'll just update UI but keep pointers - careful
+                // simple: re-render but keep same data indexes
+            });
+        });
+
+        document.querySelectorAll('.delete-embed').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.dataset.index);
+                if (embedsArray.length > 1) {
+                    embedsArray.splice(idx, 1);
+                } else {
+                    embedsArray = [{ title:"", description:"", color:"#5865f2", author:"", authorIcon:"", footer:"", footerIcon:"", image:"", thumbnail:"" }];
+                }
+                renderEmbedEditors();
+                updatePreview();
+            });
+        });
+    }
+
+    function escapeAttr(str) { if(!str) return ''; return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+    function addNewEmbed() {
+        if (embedsArray.length < 8) {
+            embedsArray.push({
+                title: "New Embed", description: "Add description here", color: "#5865f2", author: "", authorIcon: "", footer: "", footerIcon: "", image: "", thumbnail: ""
+            });
+            renderEmbedEditors();
+            updatePreview();
+        } else {
+            showToast("Max 8 embeds", false);
         }
     }
 
-    window.showTab = (tab) => {
-        const availableTab = document.getElementById('availableTab');
-        const myTab = document.getElementById('myTab');
-        const btns = document.querySelectorAll('.tab');
-        
-        btns.forEach(btn => btn.classList.remove('active'));
-        
-        if (tab === 'available') {
-            availableTab.classList.remove('hidden');
-            myTab.classList.add('hidden');
-            btns[0].classList.add('active');
-        } else {
-            availableTab.classList.add('hidden');
-            myTab.classList.remove('hidden');
-            btns[1].classList.add('active');
-        }
-    };
+    function showToast(msg, isError = false) {
+        const toastDiv = document.getElementById('toast-notify');
+        const toastSpan = document.getElementById('toastMsg');
+        toastSpan.innerText = msg;
+        toastDiv.style.display = 'flex';
+        if (isError) toastDiv.style.borderLeftColor = '#ff4655';
+        else toastDiv.style.borderLeftColor = '#23a559';
+        setTimeout(() => { toastDiv.style.display = 'none'; }, 2800);
+    }
 
-    // Auth State Listener
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            currentUser = user;
-            const userDoc = await getDoc(doc(db, 'users', user.uid));
-            if (userDoc.exists()) {
-                currentUserRole = userDoc.data().role;
-            }
-            
-            document.getElementById('authButtons').classList.add('hidden');
-            document.getElementById('userInfo').classList.remove('hidden');
-            document.getElementById('userName').textContent = user.displayName || user.email.split('@')[0];
-            document.getElementById('userAvatar').textContent = (user.displayName || 'م')[0];
-            
-            await loadDashboard();
-            document.getElementById('dashboardPage').classList.remove('hidden');
-            document.getElementById('homePage').classList.add('hidden');
-        } else {
-            currentUser = null;
-            currentUserRole = null;
-            document.getElementById('authButtons').classList.remove('hidden');
-            document.getElementById('userInfo').classList.add('hidden');
-            document.getElementById('dashboardPage').classList.add('hidden');
-            document.getElementById('homePage').classList.remove('hidden');
-            loadOrders();
+    async function sendWebhook() {
+        const url = webhookUrlInput.value.trim();
+        if (!url.includes("discord.com/api/webhooks")) {
+            showToast(translations[currentLang].error, true);
+            return;
         }
+        const loader = document.getElementById('sendLoader');
+        const sendBtnSpan = document.getElementById('lblSend');
+        loader.style.display = 'inline-block';
+        sendBtnSpan.style.opacity = '0.6';
+
+        const payload = {
+            username: botNameInput.value.trim() || undefined,
+            avatar_url: botAvatarInput.value.trim() || undefined,
+            content: messageTextarea.value || "",
+            embeds: embedsArray.map(e => {
+                const embedObj = {};
+                if (e.title && e.title.trim()) embedObj.title = e.title;
+                if (e.description && e.description.trim()) embedObj.description = e.description;
+                if (e.color) embedObj.color = parseInt(e.color.replace('#',''), 16);
+                if (e.author && e.author.trim()) embedObj.author = { name: e.author, icon_url: e.authorIcon || undefined };
+                if (e.footer && e.footer.trim()) embedObj.footer = { text: e.footer, icon_url: e.footerIcon || undefined };
+                if (e.image && e.image.trim()) embedObj.image = { url: e.image };
+                if (e.thumbnail && e.thumbnail.trim()) embedObj.thumbnail = { url: e.thumbnail };
+                return embedObj;
+            }).filter(obj => Object.keys(obj).length > 0)
+        };
+        if (payload.embeds.length === 0 && !payload.content) payload.content = " ";
+        try {
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) showToast(translations[currentLang].success);
+            else throw new Error();
+        } catch (err) {
+            showToast(translations[currentLang].error, true);
+        }
+        loader.style.display = 'none';
+        sendBtnSpan.style.opacity = '1';
+    }
+
+    function copyJSON() {
+        const data = {
+            username: botNameInput.value,
+            avatar_url: botAvatarInput.value,
+            content: messageTextarea.value,
+            embeds: embedsArray
+        };
+        navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+        showToast(translations[currentLang].copied);
+    }
+
+    function applyLanguage() {
+        const t = translations[currentLang];
+        document.getElementById('lblWebhook').innerText = t.webhook;
+        document.getElementById('lblMessage').innerText = t.message;
+        document.getElementById('lblAddEmbed').innerText = t.addEmbed;
+        document.getElementById('lblCopy').innerText = t.copy;
+        document.getElementById('lblSend').innerText = t.send;
+    }
+
+    document.getElementById('langSelect').addEventListener('change', (e) => {
+        currentLang = e.target.value;
+        applyLanguage();
     });
 
-    // Initial load
-    loadOrders();
-</script>
+    document.getElementById('addEmbedBtn').addEventListener('click', addNewEmbed);
+    document.getElementById('copyJsonBtn').addEventListener('click', copyJSON);
+    document.getElementById('sendWebhookBtn').addEventListener('click', sendWebhook);
+    botNameInput.addEventListener('input', updatePreview);
+    botAvatarInput.addEventListener('input', updatePreview);
+    messageTextarea.addEventListener('input', updatePreview);
 
+    // initial loads
+    renderEmbedEditors();
+    updatePreview();
+    applyLanguage();
+    currentLang = "en";
+    applyLanguage();
+    setInterval(() => updateTimestamp(), 30000);
+</script>
 </body>
 </html>
