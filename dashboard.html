@@ -1,161 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | xBlue Marketplace</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
 body {
-  margin: 0;
-  font-family: Arial;
-  background: #0f172a;
-  color: white;
+  margin:0;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  background:#0f1011;
+  color:white;
 }
 
-/* Navbar */
-.navbar {
-  background: #020617;
-  padding: 15px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+nav {
+  background:#1e1f22;
+  padding:15px 25px;
+  display:flex;
+  justify-content:space-between;
 }
 
-.navbar h2 {
-  margin: 0;
-}
-
-.logout {
-  background: #ef4444;
-}
-
-/* Layout */
 .container {
-  padding: 30px;
+  padding:25px;
+  max-width:900px;
+  margin:auto;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 20px;
-}
-
-/* Cards */
 .card {
-  background: #1e293b;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  background:#1e1f22;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:20px;
 }
 
-.card h3 {
-  margin-top: 0;
+input, textarea {
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+  background:#2b2d31;
+  color:white;
 }
 
-/* Inputs */
-input, textarea, select {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 10px;
-  border: none;
-  background: #334155;
-  color: white;
-}
-
-/* Buttons */
 button {
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background: #3b82f6;
-  color: white;
-  cursor: pointer;
-  margin-top: 5px;
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#5865f2;
+  color:white;
+  cursor:pointer;
 }
 
-button:hover {
-  background: #2563eb;
-}
-
-/* Orders */
 .order {
-  background: #334155;
-  padding: 15px;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-
-/* Status */
-.status {
-  padding: 5px 10px;
-  border-radius: 8px;
-  display: inline-block;
-  margin-top: 5px;
-}
-
-.pending { background: orange; }
-.accepted { background: green; }
-.rejected { background: red; }
-
-.actions button {
-  margin-right: 5px;
+  background:#2b2d31;
+  padding:15px;
+  border-radius:10px;
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="navbar">
-  <h2>🚀 Marketplace</h2>
-  <button class="logout" onclick="logout()">Logout</button>
-</div>
+<nav>
+  <div>Dashboard</div>
+  <button onclick="logout()">Logout</button>
+</nav>
 
 <div class="container">
 
-<div class="grid">
+  <div class="card">
+    <h3>Create Order</h3>
+    <input id="title" placeholder="Title">
+    <textarea id="desc" placeholder="Description"></textarea>
+    <input id="budget" placeholder="Budget">
+    <button onclick="createOrder()">Submit</button>
+  </div>
 
-<!-- User Info -->
-<div class="card">
-  <h3>Profile</h3>
-  <p><b>Email:</b> <span id="email"></span></p>
-  <p><b>Role:</b> <span id="role"></span></p>
-  <p><b>Specialty:</b> <span id="specialty"></span></p>
-</div>
-
-<!-- Create Order -->
-<div class="card" id="createOrderBox">
-  <h3>Create Order</h3>
-  <input id="title" placeholder="Title">
-  <textarea id="desc" placeholder="Description"></textarea>
-  <select id="type">
-    <option value="Developer">Developer</option>
-    <option value="Designer">Designer</option>
-    <option value="Writer">Writer</option>
-  </select>
-  <button onclick="createOrder()">Send Order</button>
-</div>
-
-</div>
-
-<!-- Orders -->
-<div class="card" style="margin-top:20px;">
-  <h3>Orders</h3>
-  <div id="orders"></div>
-</div>
+  <div class="card">
+    <h3>Orders</h3>
+    <div id="orders"></div>
+  </div>
 
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getDatabase, ref, get, push, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getDatabase,
+  ref,
+  push,
+  onValue
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAUbpzyuACWNlDIkfe_A47sSQd_We41Gbk",
   authDomain: "my-marketplace-c2cd7.firebaseapp.com",
   databaseURL: "https://my-marketplace-c2cd7-default-rtdb.firebaseio.com",
-  projectId: "my-marketplace-c2cd7"
+  projectId: "my-marketplace-c2cd7",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -163,110 +110,63 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 
 let currentUser;
-let role = "";
-let specialty = "";
 
-onAuthStateChanged(auth, async (user) => {
+// 🔐 تأكد المستخدم مسجل
+onAuthStateChanged(auth, user => {
   if (!user) {
-    window.location.href = "index.html";
-    return;
+    location.href = "index.html";
+  } else {
+    currentUser = user;
+    loadOrders();
   }
-
-  currentUser = user;
-  document.getElementById("email").innerText = user.email;
-
-  const snap = await get(ref(db, "users/" + user.uid));
-  const data = snap.val();
-
-  role = data.role;
-  specialty = data.specialty || "None";
-
-  document.getElementById("role").innerText = role;
-  document.getElementById("specialty").innerText = specialty;
-
-  if (role === "seller") {
-    document.getElementById("createOrderBox").style.display = "none";
-  }
-
-  loadOrders();
 });
 
-// Create Order
-window.createOrder = async function() {
+// ➕ إنشاء طلب
+window.createOrder = () => {
   const title = document.getElementById("title").value;
   const desc = document.getElementById("desc").value;
-  const type = document.getElementById("type").value;
+  const budget = document.getElementById("budget").value;
 
-  if (!title || !desc) return alert("Fill all");
-
-  await push(ref(db, "orders"), {
+  push(ref(db, "orders"), {
     title,
     desc,
-    type,
-    status: "pending",
-    owner: currentUser.uid
+    budget,
+    status: "open",
+    userId: currentUser.uid,
+    createdAt: Date.now()
   });
 
-  alert("Order sent");
-  loadOrders();
-}
+  alert("Order created ✅");
+};
 
-// Load Orders
-async function loadOrders() {
-  const container = document.getElementById("orders");
-  container.innerHTML = "";
+// 📦 عرض الطلبات
+function loadOrders() {
+  const ordersRef = ref(db, "orders");
 
-  const snap = await get(ref(db, "orders"));
+  onValue(ordersRef, snapshot => {
+    const data = snapshot.val();
+    const container = document.getElementById("orders");
+    container.innerHTML = "";
 
-  snap.forEach(child => {
-    const o = child.val();
-    const id = child.key;
+    if (!data) return;
 
-    if (role === "seller" && o.type !== specialty) return;
-
-    let buttons = "";
-
-    if (role === "seller" && o.status === "pending") {
-      buttons = `
-        <div class="actions">
-          <button onclick="accept('${id}')">Accept</button>
-          <button onclick="reject('${id}')">Reject</button>
+    Object.values(data).reverse().forEach(order => {
+      container.innerHTML += `
+        <div class="order">
+          <b>${order.title}</b><br>
+          ${order.desc}<br>
+          💰 ${order.budget}<br>
+          📌 ${order.status}
         </div>
       `;
-    }
-
-    container.innerHTML += `
-      <div class="order">
-        <h4>${o.title}</h4>
-        <p>${o.desc}</p>
-        <span class="status ${o.status}">${o.status}</span>
-        ${buttons}
-      </div>
-    `;
+    });
   });
 }
 
-// Accept
-window.accept = async function(id) {
-  await update(ref(db, "orders/" + id), {
-    status: "accepted",
-    seller: currentUser.uid
-  });
-  loadOrders();
-}
-
-// Reject
-window.reject = async function(id) {
-  await update(ref(db, "orders/" + id), {
-    status: "rejected"
-  });
-  loadOrders();
-}
-
-// Logout
-window.logout = function() {
+// 🚪 تسجيل خروج
+window.logout = () => {
   signOut(auth);
-}
+};
 </script>
 
 </body>
