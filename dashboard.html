@@ -12,78 +12,136 @@ body {
   color: white;
 }
 
-.container {
-  padding: 20px;
+/* Navbar */
+.navbar {
+  background: #020617;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.box {
+.navbar h2 {
+  margin: 0;
+}
+
+.logout {
+  background: #ef4444;
+}
+
+/* Layout */
+.container {
+  padding: 30px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+}
+
+/* Cards */
+.card {
   background: #1e293b;
   padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
+.card h3 {
+  margin-top: 0;
+}
+
+/* Inputs */
 input, textarea, select {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin: 8px 0;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
+  background: #334155;
+  color: white;
 }
 
+/* Buttons */
 button {
   padding: 10px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #3b82f6;
   color: white;
   cursor: pointer;
+  margin-top: 5px;
 }
 
 button:hover {
   background: #2563eb;
 }
 
-.logout {
-  background: red;
-}
-
+/* Orders */
 .order {
   background: #334155;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 15px;
+  border-radius: 10px;
   margin-top: 10px;
+}
+
+/* Status */
+.status {
+  padding: 5px 10px;
+  border-radius: 8px;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.pending { background: orange; }
+.accepted { background: green; }
+.rejected { background: red; }
+
+.actions button {
+  margin-right: 5px;
 }
 </style>
 </head>
 
 <body>
 
+<div class="navbar">
+  <h2>🚀 Marketplace</h2>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
+
 <div class="container">
 
-<div class="box">
-<h2>Welcome</h2>
-<p>Email: <span id="email"></span></p>
-<p>Role: <span id="role"></span></p>
-<p>Specialty: <span id="specialty"></span></p>
-<button class="logout" onclick="logout()">Logout</button>
+<div class="grid">
+
+<!-- User Info -->
+<div class="card">
+  <h3>Profile</h3>
+  <p><b>Email:</b> <span id="email"></span></p>
+  <p><b>Role:</b> <span id="role"></span></p>
+  <p><b>Specialty:</b> <span id="specialty"></span></p>
 </div>
 
-<div class="box" id="createOrderBox">
-<h3>Create Order</h3>
-<input id="title" placeholder="Title">
-<textarea id="desc" placeholder="Description"></textarea>
-<select id="type">
-  <option value="Developer">Developer</option>
-  <option value="Designer">Designer</option>
-  <option value="Writer">Writer</option>
-</select>
-<button onclick="createOrder()">Send</button>
+<!-- Create Order -->
+<div class="card" id="createOrderBox">
+  <h3>Create Order</h3>
+  <input id="title" placeholder="Title">
+  <textarea id="desc" placeholder="Description"></textarea>
+  <select id="type">
+    <option value="Developer">Developer</option>
+    <option value="Designer">Designer</option>
+    <option value="Writer">Writer</option>
+  </select>
+  <button onclick="createOrder()">Send Order</button>
 </div>
 
-<div class="box">
-<h3>Orders</h3>
-<div id="orders"></div>
+</div>
+
+<!-- Orders -->
+<div class="card" style="margin-top:20px;">
+  <h3>Orders</h3>
+  <div id="orders"></div>
 </div>
 
 </div>
@@ -108,7 +166,6 @@ let currentUser;
 let role = "";
 let specialty = "";
 
-// تحميل المستخدم
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "index.html";
@@ -127,7 +184,6 @@ onAuthStateChanged(auth, async (user) => {
   document.getElementById("role").innerText = role;
   document.getElementById("specialty").innerText = specialty;
 
-  // اخفاء الفورم لو بائع
   if (role === "seller") {
     document.getElementById("createOrderBox").style.display = "none";
   }
@@ -135,7 +191,7 @@ onAuthStateChanged(auth, async (user) => {
   loadOrders();
 });
 
-// إنشاء طلب
+// Create Order
 window.createOrder = async function() {
   const title = document.getElementById("title").value;
   const desc = document.getElementById("desc").value;
@@ -155,7 +211,7 @@ window.createOrder = async function() {
   loadOrders();
 }
 
-// تحميل الطلبات
+// Load Orders
 async function loadOrders() {
   const container = document.getElementById("orders");
   container.innerHTML = "";
@@ -166,15 +222,16 @@ async function loadOrders() {
     const o = child.val();
     const id = child.key;
 
-    // فلترة للبائع
     if (role === "seller" && o.type !== specialty) return;
 
     let buttons = "";
 
     if (role === "seller" && o.status === "pending") {
       buttons = `
-        <button onclick="accept('${id}')">Accept</button>
-        <button onclick="reject('${id}')">Reject</button>
+        <div class="actions">
+          <button onclick="accept('${id}')">Accept</button>
+          <button onclick="reject('${id}')">Reject</button>
+        </div>
       `;
     }
 
@@ -182,14 +239,14 @@ async function loadOrders() {
       <div class="order">
         <h4>${o.title}</h4>
         <p>${o.desc}</p>
-        <p>Status: ${o.status}</p>
+        <span class="status ${o.status}">${o.status}</span>
         ${buttons}
       </div>
     `;
   });
 }
 
-// قبول
+// Accept
 window.accept = async function(id) {
   await update(ref(db, "orders/" + id), {
     status: "accepted",
@@ -198,7 +255,7 @@ window.accept = async function(id) {
   loadOrders();
 }
 
-// رفض
+// Reject
 window.reject = async function(id) {
   await update(ref(db, "orders/" + id), {
     status: "rejected"
@@ -206,7 +263,7 @@ window.reject = async function(id) {
   loadOrders();
 }
 
-// خروج
+// Logout
 window.logout = function() {
   signOut(auth);
 }
