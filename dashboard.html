@@ -8,59 +8,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
-body {
-  margin:0;
-  font-family:'Plus Jakarta Sans', sans-serif;
-  background:#0f1011;
-  color:white;
-}
-
-nav {
-  background:#1e1f22;
-  padding:15px 25px;
-  display:flex;
-  justify-content:space-between;
-}
-
-.container {
-  padding:25px;
-  max-width:900px;
-  margin:auto;
-}
-
-.card {
-  background:#1e1f22;
-  padding:20px;
-  border-radius:12px;
-  margin-bottom:20px;
-}
-
-input, textarea {
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border-radius:8px;
-  border:none;
-  background:#2b2d31;
-  color:white;
-}
-
-button {
-  margin-top:10px;
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  background:#5865f2;
-  color:white;
-  cursor:pointer;
-}
-
-.order {
-  background:#2b2d31;
-  padding:15px;
-  border-radius:10px;
-  margin-top:10px;
-}
+body {margin:0;font-family:'Plus Jakarta Sans';background:#0f1011;color:white;}
+nav {background:#1e1f22;padding:15px;display:flex;justify-content:space-between;}
+.container {padding:20px;max-width:900px;margin:auto;}
+.card {background:#1e1f22;padding:20px;border-radius:12px;margin-bottom:20px;}
+input, textarea {width:100%;padding:10px;margin-top:10px;border-radius:8px;border:none;background:#2b2d31;color:white;}
+button {margin-top:10px;padding:10px;border:none;border-radius:8px;background:#5865f2;color:white;cursor:pointer;}
+.order {background:#2b2d31;padding:15px;border-radius:10px;margin-top:10px;}
+.chat {background:#111;padding:10px;height:200px;overflow:auto;margin-top:10px;border-radius:8px;}
+.msg {margin:5px 0;}
+.admin {border:2px solid #ff4655;}
 </style>
 </head>
 
@@ -73,6 +30,7 @@ button {
 
 <div class="container">
 
+  <!-- Create Order -->
   <div class="card">
     <h3>Create Order</h3>
     <input id="title" placeholder="Title">
@@ -81,9 +39,30 @@ button {
     <button onclick="createOrder()">Submit</button>
   </div>
 
+  <!-- Orders -->
   <div class="card">
     <h3>Orders</h3>
     <div id="orders"></div>
+  </div>
+
+  <!-- Chat -->
+  <div class="card">
+    <h3>Chat</h3>
+    <div id="chatBox" class="chat"></div>
+    <input id="chatInput" placeholder="Message...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <!-- Admin -->
+  <div class="card admin" id="adminPanel" style="display:none;">
+    <h3>Admin Panel 👑</h3>
+    <input id="targetUid" placeholder="User UID">
+    <select id="roleSelect">
+      <option value="buyer">Buyer</option>
+      <option value="seller">Seller</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button onclick="setRole()">Set Role</button>
   </div>
 
 </div>
@@ -95,7 +74,9 @@ import {
   getDatabase,
   ref,
   push,
-  onValue
+  onValue,
+  update,
+  get
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -110,63 +91,125 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 
 let currentUser;
+let userRole = "buyer";
+let currentChat = null;
 
-// 🔐 تأكد المستخدم مسجل
-onAuthStateChanged(auth, user => {
-  if (!user) {
-    location.href = "index.html";
-  } else {
-    currentUser = user;
-    loadOrders();
+// 🔐 Auth
+onAuthStateChanged(auth, async user => {
+  if (!user) return location.href = "index.html";
+
+  currentUser = user;
+
+  // 📥 جلب role
+  const snap = await get(ref(db, 'users/' + user.uid));
+  if (snap.exists()) userRole = snap.val().role;
+
+  if (user.email === "xbluestudio2009@gmail.com") {
+    document.getElementById("adminPanel").style.display = "block";
   }
+
+  loadOrders();
 });
 
-// ➕ إنشاء طلب
+// ➕ Create Order
 window.createOrder = () => {
-  const title = document.getElementById("title").value;
-  const desc = document.getElementById("desc").value;
-  const budget = document.getElementById("budget").value;
-
   push(ref(db, "orders"), {
-    title,
-    desc,
-    budget,
+    title: title.value,
+    desc: desc.value,
+    budget: budget.value,
     status: "open",
-    userId: currentUser.uid,
+    buyerId: currentUser.uid,
+    sellerId: null,
     createdAt: Date.now()
   });
-
-  alert("Order created ✅");
 };
 
-// 📦 عرض الطلبات
+// 📦 Orders
 function loadOrders() {
-  const ordersRef = ref(db, "orders");
-
-  onValue(ordersRef, snapshot => {
+  onValue(ref(db, "orders"), snapshot => {
     const data = snapshot.val();
-    const container = document.getElementById("orders");
-    container.innerHTML = "";
+    orders.innerHTML = "";
 
     if (!data) return;
 
-    Object.values(data).reverse().forEach(order => {
-      container.innerHTML += `
+    Object.entries(data).reverse().forEach(([id, o]) => {
+
+      let btns = "";
+
+      if (userRole === "seller" && o.status === "open") {
+        btns += `<button onclick="acceptOrder('${id}')">Accept</button>`;
+      }
+
+      if (o.status === "accepted" &&
+         (o.buyerId === currentUser.uid || o.sellerId === currentUser.uid)) {
+        btns += `<button onclick="openChat('${id}')">Chat</button>`;
+      }
+
+      orders.innerHTML += `
         <div class="order">
-          <b>${order.title}</b><br>
-          ${order.desc}<br>
-          💰 ${order.budget}<br>
-          📌 ${order.status}
+          <b>${o.title}</b><br>
+          ${o.desc}<br>
+          💰 ${o.budget}<br>
+          📌 ${o.status}<br>
+          ${btns}
         </div>
       `;
     });
   });
 }
 
-// 🚪 تسجيل خروج
-window.logout = () => {
-  signOut(auth);
+// ✅ Accept
+window.acceptOrder = (id) => {
+  update(ref(db, "orders/" + id), {
+    status: "accepted",
+    sellerId: currentUser.uid
+  });
 };
+
+// 💬 Open Chat
+window.openChat = (orderId) => {
+  currentChat = orderId;
+  loadChat(orderId);
+};
+
+// 📩 Load Messages
+function loadChat(orderId) {
+  onValue(ref(db, "messages/" + orderId), snap => {
+    const data = snap.val();
+    chatBox.innerHTML = "";
+
+    if (!data) return;
+
+    Object.values(data).forEach(m => {
+      chatBox.innerHTML += `<div class="msg"><b>${m.sender}:</b> ${m.text}</div>`;
+    });
+  });
+}
+
+// ✉️ Send
+window.sendMessage = () => {
+  if (!currentChat) return alert("Open chat first");
+
+  push(ref(db, "messages/" + currentChat), {
+    text: chatInput.value,
+    sender: currentUser.email,
+    createdAt: Date.now()
+  });
+
+  chatInput.value = "";
+};
+
+// 👑 Admin: Set Role
+window.setRole = () => {
+  update(ref(db, "users/" + targetUid.value), {
+    role: roleSelect.value
+  });
+  alert("Role updated ✅");
+};
+
+// 🚪 Logout
+window.logout = () => signOut(auth);
+
 </script>
 
 </body>
