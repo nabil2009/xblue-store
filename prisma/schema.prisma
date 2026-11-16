@@ -1,0 +1,96 @@
+generator client { provider = "prisma-client-js" }
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+enum Role { USER ADMIN OWNER }
+enum TxType { ADD REMOVE PURCHASE REWARD }
+model User {
+  id String @id @default(cuid())
+  discordId String @unique
+  username String
+  avatar String?
+  banner String?
+  role Role @default(USER)
+  coins Int @default(0)
+  banned Boolean @default(false)
+  lastDaily DateTime?
+  createdAt DateTime @default(now())
+  purchases Purchase[]
+  transactions Transaction[]
+  downloads DownloadLog[]
+  reviews Review[]
+}
+model Category {
+  id String @id @default(cuid())
+  name String
+  slug String @unique
+  icon String
+  color String
+  projects Project[]
+}
+model Project {
+  id String @id @default(cuid())
+  title String
+  slug String @unique
+  description String
+  categoryId String
+  category Category @relation(fields: [categoryId], references: [id])
+  price Int @default(0)
+  images String[]
+  fileUrl String
+  version String @default("1.0.0")
+  downloads Int @default(0)
+  rating Float @default(0)
+  isFeatured Boolean @default(false)
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  purchases Purchase[]
+  reviews Review[]
+  logs DownloadLog[]
+}
+model Purchase {
+  id String @id @default(cuid())
+  userId String
+  projectId String
+  pricePaid Int
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+  @@unique([userId, projectId])
+}
+model Transaction {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  amount Int
+  type TxType
+  reason String
+  adminId String?
+  createdAt DateTime @default(now())
+}
+model DownloadLog {
+  id String @id @default(cuid())
+  userId String
+  projectId String
+  user User @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
+}
+model Review {
+  id String @id @default(cuid())
+  userId String
+  projectId String
+  rating Int
+  comment String
+  user User @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+  @@unique([userId, projectId])
+}
+model AuditLog {
+  id String @id @default(cuid())
+  adminId String
+  action String
+  target String?
+  createdAt DateTime @default(now())
+}
