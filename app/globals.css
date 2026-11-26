@@ -1,0 +1,13 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+body{background:#0A0612;color:#f3eaff;background-image:linear-gradient(rgba(161,0,242,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(161,0,242,.09) 1px,transparent 1px);background-size:44px 44px;min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(600px circle at 15% 10%,rgba(161,0,242,.28),transparent 60%),radial-gradient(600px circle at 90% 60%,rgba(255,0,184,.18),transparent 60%)}
+.glass{background:rgba(255,255,255,.05);backdrop-filter:blur(14px);border:1px solid rgba(161,0,242,.35);border-radius:20px;transition:.25s}
+.glass:hover{box-shadow:0 0 28px rgba(161,0,242,.35);transform:translateY(-3px)}
+.btn{display:inline-block;padding:.65rem 1.4rem;border-radius:999px;font-weight:700;background:linear-gradient(90deg,#A100F2,#FF00B8);box-shadow:0 0 18px rgba(255,0,184,.5);transition:.2s;cursor:pointer;border:0;color:#fff}
+.btn:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(255,0,184,.8)}
+.btn-ghost{background:transparent;border:1px solid #A100F2;box-shadow:none}
+.inp{width:100%;padding:.7rem 1rem;border-radius:12px;background:rgba(0,0,0,.4);border:1px solid rgba(161,0,242,.5);color:#fff;outline:0}
+.inp:focus{border-color:#FF00B8}
+.neon{background:linear-gradient(90deg,#A100F2,#FF00B8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.up{animation:up .7s both}@keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.float{animation:fl 4s ease-in-out infinite}@keyframes fl{50%{transform:translateY(-12px)}}
